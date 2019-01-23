@@ -10,6 +10,7 @@ tests/
 .project
 .idea
 .vscode
+screenshots
 node_modules
 test.js
 npm-debug.log
