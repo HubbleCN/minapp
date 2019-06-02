@@ -6,13 +6,16 @@ import wepy from 'wepy'
 
 const appId = wepy.getAccountInfoSync().miniProgram.appId
 
-const baseUrl = `http://localhost:8080/api/wx/user/${appId}`
+const baseUrl = `http://localhost:8082/miniweb/wx/user/${appId}`
 
 const env = '-test' // -dev 或者 -test
 const apiMall = 'https://sujiefs.com/'
 // const apiMall = 'http://localhost:8080/'
 
 const wxLogin = (params) => wxRequest(params, `${baseUrl}/login`)
+
+// 用户是否绑定手机号
+const getUserInfo = (params) => wxRequest(params, `${baseUrl}/getUserInfo`)
 
 /**
  * 获取发现好商品接口
@@ -93,9 +96,6 @@ const messageInfo = (params) => wxRequest(params, apiMall + '/api/systemMessage/
 const registerUser = (params) => wxRequest(params, apiMall + '/api/userCenter/register')
 // 发送短信
 const sendRandCode = (params) => wxRequest(params, apiMall + '/api/sms/send')
-
-// 用户是否绑定手机号
-const getUserInfo = (params) => wxRequest(params, apiMall + '/api/userCenter/getUserInfo')
 
 // 用户收货地址
 const getUserAddress = (params) => wxRequest(params, apiMall + '/api/receiverInfo/list')
