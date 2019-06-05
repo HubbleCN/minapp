@@ -1,11 +1,11 @@
 <style type="less">
-.button-sp-area{
-    margin: 0 auto;
-    padding-top: 15px;
-    width: 60%;
+.button-sp-area {
+  margin: 0 auto;
+  padding-top: 15px;
+  width: 60%;
 }
-.mini-btn{
-    margin-right: 5px;
+.mini-btn {
+  margin-right: 5px;
 }
 </style>
 <template>
@@ -40,9 +40,9 @@
 </template>
 
 <script>
-    import wepy from 'wepy';
+import wepy from 'wepy'
 
-    export default class Button extends wepy.page {
+export default class Button extends wepy.page {
 
-    }
+}
 </script>

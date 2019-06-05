@@ -1,9 +1,9 @@
 <style>
-.weui-footer{
-    margin-bottom: 50px;
+.weui-footer {
+  margin-bottom: 50px;
 }
-.weui-footer_fixed-bottom{
-    margin-bottom: 0;
+.weui-footer_fixed-bottom {
+  margin-bottom: 0;
 }
 </style>
 <template>
@@ -46,9 +46,9 @@
 </template>
 
 <script>
-    import wepy from 'wepy';
+import wepy from 'wepy'
 
-    export default class Footer extends wepy.page {
+export default class Footer extends wepy.page {
 
-    }
+}
 </script>

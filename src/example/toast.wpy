@@ -1,6 +1,6 @@
 <style>
-page{
-    background-color: #FFFFFF;
+page {
+  background-color: #ffffff;
 }
 </style>
 <template>
@@ -19,24 +19,24 @@ page{
 </template>
 
 <script>
-    import wepy from 'wepy';
+import wepy from 'wepy'
 
-    export default class Toast extends wepy.page {
-        methods = {
-            openToast () {
-                wx.showToast({
-                    title: '已完成',
-                    icon: 'success',
-                    duration: 3000
-                });
-            },
-            openLoading () {
-                wx.showToast({
-                    title: '数据加载中',
-                    icon: 'loading',
-                    duration: 3000
-                });
-            }
-        }
+export default class Toast extends wepy.page {
+  methods = {
+    openToast () {
+      wx.showToast({
+        title: '已完成',
+        icon: 'success',
+        duration: 3000
+      })
+    },
+    openLoading () {
+      wx.showToast({
+        title: '数据加载中',
+        icon: 'loading',
+        duration: 3000
+      })
     }
+  }
+}
 </script>

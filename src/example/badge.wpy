@@ -56,9 +56,9 @@
 </template>
 
 <script>
-    import wepy from 'wepy';
+import wepy from 'wepy'
 
-    export default class Badge extends wepy.page {
+export default class Badge extends wepy.page {
 
-    }
+}
 </script>

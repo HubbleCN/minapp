@@ -1,38 +1,42 @@
 <template>
-  <view class="address">
-    <repeat for="{{addressList}}" key="index" index="index" item="item">
-      <view class="list_box">
-        <swipeDelete :swipeData="item" @delItem.user="handleDelItem">
-          <view class="address_list" @tap="tapSelAddress" data-id="{{item.id}}">
-            <view class="title">
-              <view class="user_info">
-                <text class="name">{{item.receiverName}}</text>
-                <text class="phone">{{item.mobile}}</text>
+  <view>
+    <view class="address">
+      <repeat for="{{addressList}}" key="index" index="index" item="item">
+        <view class="list_box">
+          <swipeDelete :swipeData="item" @delItem.user="handleDelItem">
+            <view class="address_list" @tap="tapSelAddress" data-id="{{item.id}}">
+              <view class="title">
+                <view class="user_info">
+                  <text class="name">{{item.receiverName}}</text>
+                  <text class="phone">{{item.mobile}}</text>
+                </view>
+                <view class="active_address">
+                  <text class="defult" wx:if="{{item.isDef==1}}"> [默认]</text>
+                  {{item.provinceName}} {{item.cityName}} {{item.areaName}} {{item.adressDetail}}
+                </view>
               </view>
-              <view class="active_address">
-                <text class="defult" wx:if="{{item.isDef==1}}"> [默认]</text>
-                {{item.provinceName}} {{item.cityName}} {{item.areaName}} {{item.adressDetail}}
+              <view class="arrow" @tap.stop="edit" data-id="{{item.id}}">
+                <i class="iconfont icon-edit"></i>
               </view>
             </view>
-            <view class="arrow"  @tap.stop="edit" data-id="{{item.id}}"><i class="iconfont icon-edit" ></i></view>
-          </view>
-        </swipeDelete>
-      </view>
-    </repeat>
-  </view>
-  <view class="add_wrap">
-    <view class="button type_red" @tap="add">新增地址</view>
+          </swipeDelete>
+        </view>
+      </repeat>
+    </view>
+    <view class="add_wrap">
+      <view class="button type_red" @tap="add">新增地址</view>
+    </view>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
 import SwipeDelete from './common/wepy-swipe-delete'
 import tip from '@/utils/tip'
-import api from "@/api/api";
+import api from '@/api/api'
 import {
   USER_SPECICAL_INFO,
   ADDRESS_ID
-} from '@/utils/constant';
+} from '@/utils/constant'
 export default class AddressList extends wepy.component {
   props = {
     addressList: {
@@ -49,72 +53,71 @@ export default class AddressList extends wepy.component {
   }
 
   data = {
-    receiverInfo:{},
-    type: ""
+    receiverInfo: {},
+    type: ''
   }
 
-  async delUserAddress(id) {
-    let that = this;
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+  async delUserAddress (id) {
+    let that = this
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {}
     const json = await api.delUserAddress({
       query: {
         id: id,
-        type:2
+        type: 2
       }
-    });
+    })
 
     if (json.data.code == 0) {
-      console.log("删除成功");
-      this.$emit('currentPage', 0);
-      this.$emit('refreshAddList', 'hehe');
+      console.log('删除成功')
+      this.$emit('currentPage', 0)
+      this.$emit('refreshAddList', 'hehe')
     } else {
       tip.error(json.data.msg)
     }
-    that.showLoading = false;
+    that.showLoading = false
   }
   methods = {
-    add() {
-      //0 列表 1新增 2编辑
-      this.$emit('currentPage', 1);
+    add () {
+      // 0 列表 1新增 2编辑
+      this.$emit('currentPage', 1)
     },
-    edit(e) {
-      var id = e.currentTarget.dataset.id;
-      //0 列表 1新增 2编辑
-      this.$emit('currentPage', 2,id);
+    edit (e) {
+      var id = e.currentTarget.dataset.id
+      // 0 列表 1新增 2编辑
+      this.$emit('currentPage', 2, id)
     },
-    //左滑删除
-    handleDelItem(itemData) {
-      this.delUserAddress(itemData.id);
-      console.log("左滑删除")
+    // 左滑删除
+    handleDelItem (itemData) {
+      this.delUserAddress(itemData.id)
+      console.log('左滑删除')
       console.log(itemData.id)
-
     },
 
-    refreshList(val){
-      if (val==undefined) return;
-      console.log("val.....",val);
-      this.addressList = val;
-      this.$apply();
+    refreshList (val) {
+      if (val === undefined) return
+      console.log('val.....', val)
+      this.addressList = val
+      this.$apply()
     },
 
     setOrgType (type) {
-      this.type=type;
+      this.type = type
     },
 
-    tapSelAddress(e) {
-      if (this.type!="order") {
-        return;
+    tapSelAddress (e) {
+      if (this.type !== 'order') {
+        return
       }
-      var id = e.currentTarget.dataset.id;
-      console.log("id=="+id);
-      wepy.setStorageSync(ADDRESS_ID,id);
+      var id = e.currentTarget.dataset.id
+      console.log('id==' + id)
+      wepy.setStorageSync(ADDRESS_ID, id)
       wepy.redirectTo({
-        url: "/pages/comfire_order?from=selAdd"
+        url: '/pages/comfire_order?from=selAdd'
       })
     }
   }
 
-  onLoad() {
+  onLoad () {
 
   }
 }
@@ -167,5 +170,4 @@ export default class AddressList extends wepy.component {
   bottom: 20rpx;
   margin: 0 auto;
 }
-
 </style>

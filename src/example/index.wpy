@@ -1,56 +1,59 @@
 <style type="less">
 .index {
-    .weui-flex{
-        align-items: center;
+  .weui-flex {
+    align-items: center;
+  }
+  .weui-cells {
+    margin-top: 0;
+    opacity: 0;
+    transform: translateY(-50%);
+    transition: 0.3s;
+    &:before,
+    &:after {
+      display: none;
     }
-    .weui-cells{
-        margin-top: 0;
-        opacity: 0;
-        transform: translateY(-50%);
-        transition: .3s;
-        &:before, &:after{
-            display: none;
-        }
-        &_show{
-            opacity: 1;
-            transform: translateY(0);
-        }
+    &_show {
+      opacity: 1;
+      transform: translateY(0);
     }
-    .weui-cell{
-        &:before{
-            right: 15px;
-        }
+  }
+  .weui-cell {
+    &:before {
+      right: 15px;
     }
+  }
 
-    .kind-list{}
-    .kind-list__item{
-        margin: 10px 0;
-        background-color: #FFFFFF;
-        border-radius: 2px;
-        overflow: hidden;
-        &:first-child{
-            margin-top: 0;
-        }
+  .kind-list {
+  }
+  .kind-list__item {
+    margin: 10px 0;
+    background-color: #ffffff;
+    border-radius: 2px;
+    overflow: hidden;
+    
+    &:first-child {
+      margin-top: 0;
     }
-    .kind-list__img{
-        width: 30px;
-        height: 30px;
-    }
+  }
+  .kind-list__img {
+    width: 30px;
+    height: 30px;
+  }
 
-    .kind-list__item-hd{
-        padding: 20px;
-        transition: opacity .3s;
-        &_show{
-            opacity: .4;
-        }
+  .kind-list__item-hd {
+    padding: 20px;
+    transition: opacity 0.3s;
+    &_show {
+      opacity: 0.4;
     }
-    .kind-list__item-bd{
-        height: 0;
-        overflow: hidden;
-        &_show{
-            height: auto;
-        }
+  }
+  .kind-list__item-bd {
+    height: 0;
+    overflow: hidden;
+    &_show {
+      height: auto;
     }
+  }
 }
 </style>
 <template>
@@ -86,49 +89,48 @@
 </template>
 
 <script>
-    import wepy from 'wepy';
+import wepy from 'wepy'
 
-    export default class Index extends wepy.page {
+export default class Index extends wepy.page {
+  data = {
+    list: [
+      {
+        id: 'form',
+        name: '表单',
+        open: false,
+        pages: ['button', 'list', 'input', 'slider', 'uploader']
+      },
+      {
+        id: 'widget',
+        name: '基础组件',
+        open: false,
+        pages: ['article', 'badge', 'flex', 'footer', 'gallery', 'grid', 'icons', 'loadmore', 'panel', 'preview', 'progress']
+      },
+      {
+        id: 'feedback',
+        name: '操作反馈',
+        open: false,
+        pages: ['actionsheet', 'dialog', 'msg', 'picker', 'toast']
+      },
+      {
+        id: 'nav',
+        name: '导航相关',
+        open: false,
+        pages: ['navbar', 'tabbar']
+      },
+      {
+        id: 'search',
+        name: '搜索相关',
+        open: false,
+        pages: ['searchbar']
+      }
+    ]
+  };
 
-        data = {
-            list: [
-                {
-                    id: 'form',
-                    name: '表单',
-                    open: false,
-                    pages: ['button', 'list', 'input', 'slider', 'uploader']
-                },
-                {
-                    id: 'widget',
-                    name: '基础组件',
-                    open: false,
-                    pages: ['article', 'badge', 'flex', 'footer', 'gallery', 'grid', 'icons', 'loadmore', 'panel', 'preview', 'progress']
-                },
-                {
-                    id: 'feedback',
-                    name: '操作反馈',
-                    open: false,
-                    pages: ['actionsheet', 'dialog', 'msg', 'picker', 'toast']
-                },
-                {
-                    id: 'nav',
-                    name: '导航相关',
-                    open: false,
-                    pages: ['navbar', 'tabbar']
-                },
-                {
-                    id: 'search',
-                    name: '搜索相关',
-                    open: false,
-                    pages: ['searchbar']
-                }
-            ]
-        };
-
-        methods = {
-            toggle (id) {
-                this.list.forEach(v => v.open = (v.id === id) ? !v.open : false);
-            }
-        };
+  methods = {
+    toggle (id) {
+      this.list.forEach(v => { v.open = (v.id === id) ? !v.open : false })
     }
+  };
+}
 </script>

@@ -21,17 +21,17 @@
   </view>
 </template>
 <script>
-import wepy from 'wepy';
+import wepy from 'wepy'
 import {
   SYSTEM_INFO,
   USER_SPECICAL_INFO
-} from '@/utils/constant';
+} from '@/utils/constant'
 import tip from '@/utils/tip'
-import api from '@/api/api';
+import api from '@/api/api'
 import SwipeDelete from './common/wepy-swipe-delete'
 export default class CollecntionList extends wepy.component {
   props = {
-    type : {
+    type: {
       default: 0
     },
     list: {
@@ -44,87 +44,86 @@ export default class CollecntionList extends wepy.component {
   }
 
   onLoad() {
-    let that = this;
+    let that = this
     console.log(that.list)
-
   }
   computed = {
 
   }
 
-  //商品取消收藏
+  // 商品取消收藏
   async goodsUnFavorite(goodsId) {
-    let that = this;
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
+    let that = this
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {}
+    let openId = userSpecialInfo.openid
     const json = await api.goodsUnFavorite({
       query: {
         openId: openId,
         goodsId: goodsId
       }
-    });
-    if (json.data.code == 0) {
-      console.log("===========商品取消收藏成功=========")
-      //tip.toast("取消收藏成功");
-      let retList = [];
+    })
+    if (json.data.code === 0) {
+      console.log('===========商品取消收藏成功=========')
+      // tip.toast("取消收藏成功");
+      let retList = []
       for (var i = 0; i < this.list.length; i++) {
-        if (this.list[i].goodsId == goodsId) {
-          continue;
+        if (this.list[i].goodsId === goodsId) {
+          continue
         } else {
-          retList.push(this.list[i]);
+          retList.push(this.list[i])
         }
       }
-      this.list = retList;
+      this.list = retList
     } else {
       tip.error(json.data.msg)
     }
-    that.$apply();
+    that.$apply()
   }
 
-  //商品取消收藏
+  // 商品取消收藏
   async delUserBrowser(goodsId) {
-    let that = this;
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
+    let that = this
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {}
+    let openId = userSpecialInfo.openid
     const json = await api.delUserBrowser({
       query: {
         openId: openId,
         goodsId: goodsId
       }
-    });
-    if (json.data.code == 0) {
-      console.log("===========商品取消收藏成功=========")
-      //tip.toast("取消收藏成功");
-      let retList = [];
+    })
+    if (json.data.code === 0) {
+      console.log('===========商品取消收藏成功=========')
+      // tip.toast("取消收藏成功");
+      let retList = []
       for (var i = 0; i < this.list.length; i++) {
-        if (this.list[i].goodsId == goodsId) {
-          continue;
+        if (this.list[i].goodsId === goodsId) {
+          continue
         } else {
-          retList.push(this.list[i]);
+          retList.push(this.list[i])
         }
       }
-      this.list = retList;
+      this.list = retList
     } else {
       tip.error(json.data.msg)
     }
-    that.$apply();
+    that.$apply()
   }
 
   methods = {
     handleDelItem(itemData) {
       console.log(itemData)
-      let objType = itemData.type;
-      if (objType==1) {
-        this.delUserBrowser(itemData.goodsId);
-      } else if (objType==2) {
-        this.goodsUnFavorite(itemData.goodsId);
+      let objType = itemData.type
+      if (objType === 1) {
+        this.delUserBrowser(itemData.goodsId)
+      } else if (objType === 2) {
+        this.goodsUnFavorite(itemData.goodsId)
       }
     },
-    refreshList(val){
-       if (val==undefined) return;
-       console.log("val.....",val);
-        this.list = val;
-        this.$apply();
+    refreshList(val) {
+      if (val === undefined) return
+      console.log('val.....', val)
+      this.list = val
+      this.$apply()
     }
   }
   events = {

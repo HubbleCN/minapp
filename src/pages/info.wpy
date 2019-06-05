@@ -74,73 +74,62 @@
 <script>
 import wepy from 'wepy'
 import api from '@/api/api'
-import {
-  USER_INFO, USER_SPECICAL_INFO
-} from '@/utils/constant'
+import tip from '@/utils/tip'
+import { USER_INFO, USER_SPECICAL_INFO } from '@/utils/constant'
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '我',
     navigationBarBackgroundColor: '#1890ff',
-    navigationBarTextStyle: 'white',
+    navigationBarTextStyle: 'white'
   }
-  components = {
-
-  }
+  components = {}
 
   data = {
-    avatarUrl: "",
-    nickName: "",
-    bShowBind:false
+    avatarUrl: '',
+    nickName: '',
+    bShowBind: false
   }
-  async getUserInfo(phone,code) {
-    let that = this;
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
+  async getUserInfo (phone, code) {
+    let that = this
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {}
+    let openId = userSpecialInfo.openid
     const json = await api.getUserInfo({
       query: {
         openId: openId
       }
-    });
+    })
 
-    if (json.data.code == 0) {
-      if (json.data.user.mobile.length>0) {
-        this.bShowBind=false;
+    if (json.data.code === '0') {
+      if (json.data.user.mobile.length > 0) {
+        this.bShowBind = false
       } else {
-        this.bShowBind = true;
+        this.bShowBind = true
       }
-      that.$apply();
+      that.$apply()
     } else {
       tip.error(json.data.msg)
     }
-    that.showLoading = false;
+    that.showLoading = false
   }
 
-  onLoad() {
-    let that = this;
-    let userInfo = wepy.getStorageSync(USER_INFO);
-    that.avatarUrl = userInfo.avatarUrl;
-    that.nickName = userInfo.nickName;
+  onLoad () {
+    let that = this
+    let userInfo = wepy.getStorageSync(USER_INFO)
+    that.avatarUrl = userInfo.avatarUrl
+    that.nickName = userInfo.nickName
   }
-  onShow(){
-    let that = this;
-    this.getUserInfo();
+  onShow () {
+    this.getUserInfo()
   }
-  computed = {
-
-  }
-  methods = {
-
-  }
-  events = {
-
-  }
+  computed = {}
+  methods = {}
+  events = {}
 }
-
 </script>
 <style lang="less">
 .header {
-   background-color: #1890ff;
-   color: #ffffff;
+  background-color: #1890ff;
+  color: #ffffff;
 
   .avatarUrl {
     width: 110rpx;
@@ -157,8 +146,6 @@ export default class Index extends wepy.page {
   padding-top: 48rpx;
 }
 
-
-
 .nickName {
   font-size: 30rpx;
   padding-top: 15rpx;
@@ -170,12 +157,12 @@ export default class Index extends wepy.page {
     align-items: unset;
 
     .weui-cell__img {
-      width:42rpx;
-      height:42rpx;
+      width: 42rpx;
+      height: 42rpx;
     }
   }
   .weui-cell__bd {
-    margin-left:20rpx;
+    margin-left: 20rpx;
 
     .tip {
       color: #999;
@@ -220,5 +207,4 @@ export default class Index extends wepy.page {
     margin-left: 60rpx;
   }
 }
-
 </style>

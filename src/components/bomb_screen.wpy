@@ -25,7 +25,7 @@
   </view>
 </template>
 <script>
-import wepy from 'wepy';
+import wepy from 'wepy'
 export default class bombScreen extends wepy.component {
   data = {
 
@@ -43,11 +43,11 @@ export default class bombScreen extends wepy.component {
   }
   methods = {
     close() {
-      this.show = false;
-      this.$emit("close")
+      this.show = false
+      this.$emit('close')
     },
     callback() {
-      this.$emit("callback")
+      this.$emit('callback')
     }
   }
 

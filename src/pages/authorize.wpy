@@ -2,7 +2,7 @@
   <view class="page authorize-contianer">
     <view class="weui-msg">
       <view class="weui-msg__icon-area">
-        <image class="authorize-icon" src="../images/icon/authorize.png">
+        <image class="authorize-icon" src="../images/icon/authorize.png"/>
       </view>
 
       <view class="weui-msg__text-area">
@@ -68,7 +68,7 @@ export default class Authorize extends wepy.page {
             let data = rlt.data.data
             wepy.setStorageSync(TOKEN, data.token)
             if (data.openid) {
-              wepy.setStorageSync(USER_SPECICAL_INFO, data.openId);
+              wepy.setStorageSync(USER_SPECICAL_INFO, data.openId)
             }
           }
         }
@@ -97,7 +97,7 @@ export default class Authorize extends wepy.page {
           let data = rlt.data.data
           wepy.setStorageSync(TOKEN, data.token)
           if (data.openid) {
-            wepy.setStorageSync(USER_SPECICAL_INFO, data.openId);
+            wepy.setStorageSync(USER_SPECICAL_INFO, data.openId)
           }
           wepy.switchTab({
             url: '/pages/index'

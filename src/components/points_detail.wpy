@@ -17,7 +17,7 @@
 </template>
 <script>
 import wepy from 'wepy'
-import Placeholder from "./common/placeholder"
+import Placeholder from './common/placeholder'
 export default class PointsDetail extends wepy.component {
   props = {
     list: [],
@@ -39,7 +39,7 @@ export default class PointsDetail extends wepy.component {
 
   }
 
-  onLoad() {
+  onLoad () {
     // if (this.list.length == 0) {
     //   this.is_empty = true;
     //   this.$apply();
@@ -79,5 +79,4 @@ export default class PointsDetail extends wepy.component {
   display: block;
   font-size: 40rpx;
 }
-
 </style>

@@ -1,9 +1,9 @@
 <style>
-page{
-    background-color: #FFFFFF;
+page {
+  background-color: #ffffff;
 }
-image{
-    margin: 4px 0;
+image {
+  margin: 4px 0;
 }
 </style>
 <template>
@@ -46,9 +46,9 @@ image{
 </template>
 
 <script>
-    import wepy from 'wepy';
+import wepy from 'wepy'
 
-    export default class Article extends wepy.page {
+export default class Article extends wepy.page {
 
-    }
+}
 </script>

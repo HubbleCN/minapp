@@ -1,13 +1,13 @@
 <style>
-.searchbar-result{
-    margin-top: 0;
-    font-size: 14px;
+.searchbar-result {
+  margin-top: 0;
+  font-size: 14px;
 }
-.searchbar-result:before{
-    display: none;
+.searchbar-result:before {
+  display: none;
 }
-.weui-cell{
-    padding: 12px 15px 12px 35px;
+.weui-cell {
+  padding: 12px 15px 12px 35px;
 }
 </style>
 <template>
@@ -20,9 +20,9 @@
 </template>
 
 <script>
-    import wepy from 'wepy';
+import wepy from 'wepy'
 
-    export default class Tabbar extends wepy.page {
+export default class Tabbar extends wepy.page {
 
-    }
+}
 </script>

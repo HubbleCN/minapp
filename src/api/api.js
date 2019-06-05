@@ -16,9 +16,6 @@ const wxLogin = (params) => wxRequest(params, `${baseUrl}/login`)
 // 用户是否绑定手机号
 const getUserInfo = (params) => wxRequest(params, `${baseUrl}/getUserInfo`)
 
-// 用户是否绑定手机号
-const getUserInfo = (params) => wxRequest(params, `${baseUrl}/getUserInfo`)
-
 /**
  * 获取发现好商品接口
  * @param  {[type]} params [description]

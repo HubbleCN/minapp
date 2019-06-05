@@ -12,45 +12,39 @@
   </view>
 </template>
 <script>
-import wepy from 'wepy';
+import wepy from 'wepy'
 export default class Search extends wepy.component {
   data = {
     search_input_value: '',
-    show : 1
-  }
+    show: 1
+  };
 
-  events = {
-
-  }
+  events = {};
   methods = {
-    searchInput(e) {
-      this.search_input_value = e.detail.value;
-      this.$apply();
+    searchInput (e) {
+      this.search_input_value = e.detail.value
+      this.$apply()
     },
-    goBack() {
+    goBack () {
       wepy.navigateBack({
         delta: 1 // 回退前 delta(默认为1) 页面
-
       })
     },
-    search() {
-      this.$emit('searchValue', this.search_input_value);
+    search () {
+      this.$emit('searchValue', this.search_input_value)
     },
-    delText() {
-      this.search_input_value = "";
-      this.$apply();
+    delText () {
+      this.search_input_value = ''
+      this.$apply()
     },
-    show(param){
-      this.show = param;
-      this.$apply();
+    show (param) {
+      this.show = param
+      this.$apply()
     }
-  }
+  };
 
-  onLoad() {
-
-  }
+  onLoad () { }
 }
-
 </script>
 <style lang="less">
 .content {
@@ -99,5 +93,4 @@ export default class Search extends wepy.component {
     font-size: 40rpx;
   }
 }
-
 </style>

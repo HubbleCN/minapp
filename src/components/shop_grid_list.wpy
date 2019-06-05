@@ -25,13 +25,13 @@ export default class ShopGridList extends wepy.component {
   props = {
     list: [],
     purchasetype: {
-      default: 1  //类型:1-商品订单;2-商品补单;
+      default: 1  // 类型:1-商品订单;2-商品补单;
     },
-    special:{
-      default: 0 //0-正常入库;1-特价专区和换货专区
+    special: {
+      default: 0 // 0-正常入库;1-特价专区和换货专区
     },
-    showTitle:{
-      default:true
+    showTitle: {
+      default: true
     }
   }
 
@@ -43,7 +43,7 @@ export default class ShopGridList extends wepy.component {
 
   }
 
-  onLoad() {
+  onLoad () {
 
   }
 }
@@ -111,5 +111,4 @@ export default class ShopGridList extends wepy.component {
     padding-left: 20rpx;
   }
 }
-
 </style>

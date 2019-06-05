@@ -18,11 +18,11 @@
 </template>
 
 <script>
-    import wepy from 'wepy';
+import wepy from 'wepy'
 
-    export default class Grid extends wepy.page {
-        data = {
-            grids: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-        }
-    }
+export default class Grid extends wepy.page {
+  data = {
+    grids: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+  }
+}
 </script>

@@ -1,6 +1,6 @@
 <style>
-.weui-form-preview{
-    margin-bottom: 25px;
+.weui-form-preview {
+  margin-bottom: 25px;
 }
 </style>
 <template>
@@ -64,9 +64,9 @@
 </template>
 
 <script>
-    import wepy from 'wepy';
+import wepy from 'wepy'
 
-    export default class Preview extends wepy.page {
+export default class Preview extends wepy.page {
 
-    }
+}
 </script>

@@ -1,6 +1,6 @@
 <style>
-page{
-    background-color: #FFFFFF;
+page {
+  background-color: #ffffff;
 }
 </style>
 <template>
@@ -32,9 +32,9 @@ page{
 </template>
 
 <script>
-    import wepy from 'wepy';
+import wepy from 'wepy'
 
-    export default class MsgFail extends wepy.page {
+export default class MsgFail extends wepy.page {
 
-    }
+}
 </script>

@@ -1,29 +1,31 @@
 <template>
-  <view wx:if="{{isShow}}">
-    <view class="hold hold1">
-      <view class="pie pie1" style="transform: rotate({{rotate1}}deg);"></view>
+  <view>
+    <view wx:if="{{isShow}}">
+      <view class="hold hold1">
+        <view class="pie pie1" style="transform: rotate({{rotate1}}deg);"></view>
+      </view>
+      <view class="hold hold2">
+        <view class="pie pie2" style="transform: rotate({{rotate2}}deg);"></view>
+      </view>
+      <view class="bg"></view>
+      <view class="time_box">
+        <view class="time">{{strD>=0?strD+"天":""}}{{strH}}:{{strM}}:{{strS}}</view>
+        <view class="over">订单结束</view>
+      </view>
     </view>
-    <view class="hold hold2">
-      <view class="pie pie2" style="transform: rotate({{rotate2}}deg);"></view>
+    <view wx:if="{{!isShow}}">
+      <view class="hold hold1">
+        <view class="pie pie1" style="transform: rotate({{rotate1}}deg);"></view>
+      </view>
+      <view class="hold hold2">
+        <view class="pie pie2" style="transform: rotate({{rotate2}}deg);"></view>
+      </view>
+      <view class="bg_zero"></view>
+      <view class="time_box">
+        <view class="time_zero">{{endTxt}}</view>
+        <view class="over">订单结束</view>
+      </view>
     </view>
-    <view class="bg"></view>
-    <view class="time_box">
-      <view class="time">{{strD>=0?strD+"天":""}}{{strH}}:{{strM}}:{{strS}}</view>
-      <view class="over">订单结束</view>
-    </view>
-  </view>
-  <view wx:if="{{!isShow}}">
-    <view class="hold hold1">
-    <view class="pie pie1" style="transform: rotate({{rotate1}}deg);"></view>
-    </view>
-    <view class="hold hold2">
-    <view class="pie pie2" style="transform: rotate({{rotate2}}deg);"></view>
-    </view>
-    <view class="bg_zero"></view>
-    <view class="time_box">
-    <view class="time_zero">{{endTxt}}</view>
-    <view class="over">订单结束</view>
-  </view>
   </view>
 </template>
 <script>
@@ -31,10 +33,10 @@ import wepy from 'wepy'
 export default class Timer extends wepy.component {
   props = {
     startTime: {
-      default: ""
+      default: ''
     },
     endTime: {
-      default: ""
+      default: ''
     }
   }
   data = {
@@ -45,123 +47,120 @@ export default class Timer extends wepy.component {
     totalDay: 0,
     isShow: false,
     interval: {},
-    endTxt:"\n00:00:00"
+    endTxt: '\n00:00:00'
   }
 
-  onLoad() {
-    this.isShow = false;
-    this.day = 0;
-    this.hour = 0;
-    this.minute = 0;
-    this.second = 0;
-    this.totalDay = 0;
-    this.startTime = "";
-    this.endTime = "";
-    clearInterval(this.interval);
+  onLoad () {
+    this.isShow = false
+    this.day = 0
+    this.hour = 0
+    this.minute = 0
+    this.second = 0
+    this.totalDay = 0
+    this.startTime = ''
+    this.endTime = ''
+    clearInterval(this.interval)
   }
 
   methods = {
-    initTimer(val) {
-      console.log(val);
-      let date = new Date();
-      this.startTime = val.startTime;
-      this.endTime = val.endTime;
-      //开始时间(.replace(/(-)/g, '/')解决ios 不兼容问题)
-      let startDay = new Date(this.startTime.replace(/(-)/g, '/'));
-      //结束时间
-      let endDay = new Date(this.endTime.replace(/(-)/g, '/'));
+    initTimer (val) {
+      console.log(val)
+      let date = new Date()
+      this.startTime = val.startTime
+      this.endTime = val.endTime
+      // 开始时间(.replace(/(-)/g, '/')解决ios 不兼容问题)
+      let startDay = new Date(this.startTime.replace(/(-)/g, '/'))
+      // 结束时间
+      let endDay = new Date(this.endTime.replace(/(-)/g, '/'))
 
-      //总共时间(单位s)
-      let totalDay = Math.floor((endDay - startDay) / 1000);
-
+      // 总共时间(单位s)
+      let totalDay = Math.floor((endDay - startDay) / 1000)
 
       // 计算时会发生隐式转换，调用valueOf()方法，转化成时间戳的形式
-      let days = (endDay - date) / 1000 / 3600 / 24;
+      let days = (endDay - date) / 1000 / 3600 / 24
 
-
-      //计算是当前时间是否在区间内
+      // 计算是当前时间是否在区间内
       if (startDay < date && date < endDay) {
-        this.isShow = true;
+        this.isShow = true
       }
 
-      let day = Math.floor(days);
-      let hours = (days - day) * 24;
-      let hour = Math.floor(hours);
-      let minutes = (hours - hour) * 60;
-      let minute = Math.floor(minutes);
-      let seconds = (minutes - minute) * 60;
-      let second = Math.floor(seconds);
+      let day = Math.floor(days)
+      let hours = (days - day) * 24
+      let hour = Math.floor(hours)
+      let minutes = (hours - hour) * 60
+      let minute = Math.floor(minutes)
+      let seconds = (minutes - minute) * 60
+      let second = Math.floor(seconds)
 
-      //赋值
-      this.day = day;
-      //this.hour = day * 24 + hour;
-      this.hour = hour;
-      this.minute = minute;
-      this.second = second;
-      this.totalDay = totalDay;
+      // 赋值
+      this.day = day
+      // this.hour = day * 24 + hour;
+      this.hour = hour
+      this.minute = minute
+      this.second = second
+      this.totalDay = totalDay
 
       this.interval = setInterval(() => {
         if ((--this.second) < 0) {
-          this.minute--;
-          this.second = 59;
-          this.$apply();
+          this.minute--
+          this.second = 59
+          this.$apply()
         }
 
         if (this.minute < 0) {
-          this.hour--;
-          this.minute = 59;
-          this.$apply();
+          this.hour--
+          this.minute = 59
+          this.$apply()
         }
         if (this.hour < 0) {
-          this.minute = 0;
-          this.second = 0;
-          this.isShow = false;
-          this.$apply();
-          clearInterval(this.interval);
+          this.minute = 0
+          this.second = 0
+          this.isShow = false
+          this.$apply()
+          clearInterval(this.interval)
         }
-        this.$apply();
-      }, 1000);
+        this.$apply()
+      }, 1000)
 
-      this.$apply();
+      this.$apply()
     }
   }
 
-  onUnload() {
-    console.log("onUnload....");
-    clearInterval(this.interval);
+  onUnload () {
+    console.log('onUnload....')
+    clearInterval(this.interval)
   }
 
-  onHide() {
-    console.log("onHide....");
-    clearInterval(this.interval);
+  onHide () {
+    console.log('onHide....')
+    clearInterval(this.interval)
   }
 
   computed = {
-    strD() {
-      return this.day;
+    strD () {
+      return this.day
     },
-    strH() {
-      return this.hour < 10 ? "0" + this.hour : this.hour;
+    strH () {
+      return this.hour < 10 ? '0' + this.hour : this.hour
     },
-    strM() {
-      return this.minute < 10 ? "0" + this.minute : this.minute;
+    strM () {
+      return this.minute < 10 ? '0' + this.minute : this.minute
     },
-    strS() {
-      return this.second < 10 ? "0" + this.second : this.second;
+    strS () {
+      return this.second < 10 ? '0' + this.second : this.second
     },
-    total() {
-      return (this.hour * 60 * 60) + (this.minute * 60) + this.second;
+    total () {
+      return (this.hour * 60 * 60) + (this.minute * 60) + this.second
     },
-    rotate1() {
-      let a = 360 - (360 / this.totalDay) * this.total;
+    rotate1 () {
+      let a = 360 - (360 / this.totalDay) * this.total
       return a < 180 ? a : 180
     },
-    rotate2() {
-      let b = 360 - (360 / this.totalDay) * this.total;
+    rotate2 () {
+      let b = 360 - (360 / this.totalDay) * this.total
       return b > 180 ? b - 180 : 0
     }
   }
-
 }
 
 </script>
@@ -208,7 +207,7 @@ export default class Timer extends wepy.component {
 .bg_zero {
   width: 160rpx;
   height: 160rpx;
-  background: #BDBDBD;
+  background: #bdbdbd;
   border-radius: 1000px;
   position: absolute;
 }
@@ -222,8 +221,7 @@ export default class Timer extends wepy.component {
   position: absolute;
   z-index: 1;
   text-align: center;
-  line-height:35rpx;
-
+  line-height: 35rpx;
 
   .time {
     margin-top: 20rpx;
@@ -232,7 +230,7 @@ export default class Timer extends wepy.component {
   }
   .time_zero {
     margin-top: 40rpx;
-    color: #BDBDBD;
+    color: #bdbdbd;
     font-size: 32rpx;
   }
   .over {
@@ -240,5 +238,4 @@ export default class Timer extends wepy.component {
     color: #808080;
   }
 }
-
 </style>

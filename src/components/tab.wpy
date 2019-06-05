@@ -24,33 +24,31 @@ export default class Filter extends wepy.component {
     /**
      * 点击tab切换
      */
-    swichNav(e) {
-      let that = this;
-      if (this.data.currentTab == e.target.dataset.current) {
-        return false;
+    swichNav (e) {
+      let that = this
+      if (this.data.currentTab === e.target.dataset.current) {
+        return false
       } else {
-        that.currentTab = e.target.dataset.current;
-        that.$apply();
+        that.currentTab = e.target.dataset.current
+        that.$apply()
       }
-      this.$emit("currentTab", that.currentTab)
+      this.$emit('currentTab', that.currentTab)
     },
     /**
      * 头部红点标识
      * @param  {[type]} dotList [description]
      * @return {[type]}         [description]
      */
-    changeList(dotList) {
-      this.tabList = dotList;
+    changeList (dotList) {
+      this.tabList = dotList
     }
   }
 
-
-  onLoad() {
-    let that = this;
-
+  onLoad () {
+    let that = this
   }
   watch = {
-    currentTab(newValue, oldValue) {
+    currentTab (newValue, oldValue) {
       console.log(`currentTab value: ${oldValue} -> ${newValue}`)
     }
   }
@@ -67,8 +65,8 @@ export default class Filter extends wepy.component {
   height: 35rpx;
   line-height: 40rpx;
   text-align: center;
-  align-items:center;/*垂直居中*/
-  justify-content: center;/*水平居中*/
+  align-items: center; /*垂直居中*/
+  justify-content: center; /*水平居中*/
   background: #e52424;
   border-radius: 100px;
   color: #fff;
@@ -85,8 +83,8 @@ export default class Filter extends wepy.component {
   height: 35rpx;
   line-height: 40rpx;
   text-align: center;
-  align-items:center;/*垂直居中*/
-  justify-content: center;/*水平居中*/
+  align-items: center; /*垂直居中*/
+  justify-content: center; /*水平居中*/
   background: #e52424;
   border-radius: 100px;
   color: #fff;
@@ -130,5 +128,4 @@ export default class Filter extends wepy.component {
   overflow-y: scroll;
   overflow-x: hidden;
 }
-
 </style>

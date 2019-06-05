@@ -196,95 +196,95 @@
 </template>
 
 <script>
-    import wepy from 'wepy';
+import wepy from 'wepy'
 
-    export default class Input extends wepy.page {
+export default class Input extends wepy.page {
+  data = {
+    tipsFlag: false,
 
-        data = {
-            tipsFlag: false,
+    radioItems: [
+            { name: 'cell standard', value: '0', checked: false },
+            { name: 'cell standard', value: '1', checked: true }
+    ],
+    checkboxItems: [
+            { name: 'standard is dealt for u.', value: '0', checked: true },
+            { name: 'standard is dealicient for u.', value: '1', checked: false }
+    ],
 
-            radioItems: [
-                {name: 'cell standard', value: '0', checked: false},
-                {name: 'cell standard', value: '1', checked: true}
-            ],
-            checkboxItems: [
-                {name: 'standard is dealt for u.', value: '0', checked: true},
-                {name: 'standard is dealicient for u.', value: '1', checked: false}
-            ],
+    date: '2016-09-01',
+    time: '12:01',
 
-            date: '2016-09-01',
-            time: '12:01',
+    countryCodes: ['+86', '+80', '+84', '+87'],
+    countryCodeIndex: 0,
 
-            countryCodes: ['+86', '+80', '+84', '+87'],
-            countryCodeIndex: 0,
+    countries: ['中国', '美国', '英国'],
+    countryIndex: 0,
 
-            countries: ['中国', '美国', '英国'],
-            countryIndex: 0,
+    accounts: ['微信号', 'QQ', 'Email'],
+    accountIndex: 0,
 
-            accounts: ['微信号', 'QQ', 'Email'],
-            accountIndex: 0,
+    isAgree: false
+  };
 
-            isAgree: false
-        };
+  methods = {
+    radioChange (e) {
+      console.log('radio发生change事件，携带value值为：', e.detail.value)
 
-        methods = {
-            radioChange (e) {
-                console.log('radio发生change事件，携带value值为：', e.detail.value);
+      this.radioItems.forEach(v => {
+        v.checked = v.value === e.detail.value
+      })
+    },
+    checkboxChange (e) {
+      console.log('checkbox发生change事件，携带value值为：', e.detail.value)
 
-                this.radioItems.forEach(v => {
-                    v.checked = v.value === e.detail.value;
-                });
-            },
-            checkboxChange (e) {
-                console.log('checkbox发生change事件，携带value值为：', e.detail.value);
+      var checkboxItems = this.checkboxItems
+      var values = e.detail.value
+      for (var i = 0, lenI = checkboxItems.length; i < lenI; ++i) {
+        checkboxItems[i].checked = false
 
-                var checkboxItems = this.checkboxItems, values = e.detail.value;
-                for (var i = 0, lenI = checkboxItems.length; i < lenI; ++i) {
-                    checkboxItems[i].checked = false;
-
-                    for (var j = 0, lenJ = values.length; j < lenJ; ++j) {
-                        if (checkboxItems[i].value === values[j]) {
-                            checkboxItems[i].checked = true;
-                            break;
-                        }
-                    }
-                }
-
-                this.checkboxItems = checkboxItems;
-            },
-            bindDateChange (e) {
-                this.data = e.detail.value;
-            },
-            bindTimeChange (e) {
-                this.time = e.detail.value;
-            },
-            bindCountryCodeChange (e) {
-                console.log('picker country code 发生选择改变，携带值为', e.detail.value);
-
-                this.countryCodeIndex = e.detail.value;
-            },
-            bindAccountChange (e) {
-                console.log('picker country 发生选择改变，携带值为', e.detail.value);
-                this.accountIndex = e.detail.value;
-            },
-            bindCountryChange (e) {
-                this.countryIndex = e.detail.value;
-            },
-            bindAgreeChange (e) {
-                this.isAgree = !!e.detail.value.length;
-            },
-            showTopTips () {
-                this.tipsFlag = true;
-                setTimeout(() => {
-                    this.tipsFlag = false;
-                    this.$apply();
-                }, 3000);
-            }
-
-        };
-
-        onLoad () {
-            this.icon = require('../images/base64.js').icon20;
+        for (var j = 0, lenJ = values.length; j < lenJ; ++j) {
+          if (checkboxItems[i].value === values[j]) {
+            checkboxItems[i].checked = true
+            break
+          }
         }
+      }
+
+      this.checkboxItems = checkboxItems
+    },
+    bindDateChange (e) {
+      this.data = e.detail.value
+    },
+    bindTimeChange (e) {
+      this.time = e.detail.value
+    },
+    bindCountryCodeChange (e) {
+      console.log('picker country code 发生选择改变，携带值为', e.detail.value)
+
+      this.countryCodeIndex = e.detail.value
+    },
+    bindAccountChange (e) {
+      console.log('picker country 发生选择改变，携带值为', e.detail.value)
+      this.accountIndex = e.detail.value
+    },
+    bindCountryChange (e) {
+      this.countryIndex = e.detail.value
+    },
+    bindAgreeChange (e) {
+      this.isAgree = !!e.detail.value.length
+    },
+    showTopTips () {
+      this.tipsFlag = true
+      setTimeout(() => {
+        this.tipsFlag = false
+        this.$apply()
+      }, 3000)
     }
+
+  };
+
+  onLoad () {
+    this.icon = require('../images/base64.js').icon20
+  }
+}
 </script>

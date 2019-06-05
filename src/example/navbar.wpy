@@ -1,16 +1,16 @@
 <style lang="less">
 .navbar {
-    .page,
-    .page__bd{
-        height: 100%;
-    }
-    .page__bd{
-        padding-bottom: 0;
-    }
-    .weui-tab__content{
-        padding-top: 60px;
-        text-align: center;
-    }
+  .page,
+  .page__bd {
+    height: 100%;
+  }
+  .page__bd {
+    padding-bottom: 0;
+  }
+  .weui-tab__content {
+    padding-top: 60px;
+    text-align: center;
+  }
 }
 </style>
 <template>
@@ -34,31 +34,30 @@
 </template>
 
 <script>
-    import wepy from 'wepy';
+import wepy from 'wepy'
 
-    const sliderWidth = 96; // 需要设置slider的宽度，用于计算中间位置
+const sliderWidth = 96 // 需要设置slider的宽度，用于计算中间位置
 
-    export default class Toast extends wepy.page {
+export default class Toast extends wepy.page {
+  data = {
+    tabs: ['选项一', '选项二', '选项三'],
+    activeIndex: 1,
+    sliderOffset: 0,
+    sliderLeft: 0
+  };
 
-        data = {
-            tabs: ['选项一', '选项二', '选项三'],
-            activeIndex: 1,
-            sliderOffset: 0,
-            sliderLeft: 0
-        };
-
-        methods = {
-            tabClick (e) {
-                this.sliderOffset = e.currentTarget.offsetLeft;
-                this.activeIndex = e.currentTarget.id;
-            }
-        }
-
-        async onLoad () {
-            let res = await wepy.getSystemInfo();
-
-            this.sliderLeft = (res.windowWidth / this.tabs.length - sliderWidth) / 2;
-            this.sliderOffset = res.windowWidth / this.tabs.length * this.activeIndex;
-        }
+  methods = {
+    tabClick (e) {
+      this.sliderOffset = e.currentTarget.offsetLeft
+      this.activeIndex = e.currentTarget.id
     }
+  }
+
+  async onLoad () {
+    let res = await wepy.getSystemInfo()
+
+    this.sliderLeft = (res.windowWidth / this.tabs.length - sliderWidth) / 2
+    this.sliderOffset = res.windowWidth / this.tabs.length * this.activeIndex
+  }
+}
 </script>

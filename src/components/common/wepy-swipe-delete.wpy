@@ -84,7 +84,7 @@ export default class Counter extends wepy.component {
 
   onLoad() {
     if (this.swipeData) {
-      this.swipeData.style = 0;
+      this.swipeData.style = 0
     }
   }
 
