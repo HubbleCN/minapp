@@ -12,5 +12,7 @@
 	"appid": "wx353b92afb18dcee0",
 	"projectname": "minapp",
 	"miniprogramRoot": "dist/",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {}
 }

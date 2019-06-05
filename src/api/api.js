@@ -6,13 +6,16 @@ import wepy from 'wepy'
 
 const appId = wepy.getAccountInfoSync().miniProgram.appId
 
-const baseUrl = `http://localhost:8080/api/wx/user/${appId}`
+const baseUrl = `http://localhost:8082/miniweb/wx/user/${appId}`
 
 const env = '-test' // -dev 或者 -test
 const apiMall = 'https://sujiefs.com/'
 // const apiMall = 'http://localhost:8080/'
 
 const wxLogin = (params) => wxRequest(params, `${baseUrl}/login`)
+// 用户是否绑定手机号
+const getUserInfo = (params) => wxRequest(params, `${baseUrl}/getUserInfo`)
+
 // 用户是否绑定手机号
 const getUserInfo = (params) => wxRequest(params, `${baseUrl}/getUserInfo`)
 

@@ -18,6 +18,8 @@ export default class extends wepy.app {
     pages: [
       'pages/authorize',
       'pages/index',
+      'pages/info',
+
       'example/index',
       'example/button',
       'example/list',
@@ -75,7 +77,7 @@ export default class extends wepy.app {
           selectedIconPath: 'images/icon/release-selected.png'
         },
         {
-          pagePath: 'example/button',
+          pagePath: 'pages/info',
           text: '我',
           iconPath: 'images/icon/mine.png',
           selectedIconPath: 'images/icon/mine-selected.png'
