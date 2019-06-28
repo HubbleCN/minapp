@@ -74,7 +74,7 @@ export default class Authorize extends wepy.page {
         }
       }
       wepy.switchTab({
-        url: '/pages/index'
+        url: '/pages/info'
       })
     }
   }
@@ -94,13 +94,13 @@ export default class Authorize extends wepy.page {
           }
         })
         if (rlt.data.msg === 'ok') {
-          let data = rlt.data.data
-          wepy.setStorageSync(TOKEN, data.token)
-          if (data.openid) {
-            wepy.setStorageSync(USER_SPECICAL_INFO, data.openId)
+          let rd = rlt.data.data
+          wepy.setStorageSync(TOKEN, rd.token)
+          if (rd.openId) {
+            wepy.setStorageSync(USER_SPECICAL_INFO, rd)
           }
           wepy.switchTab({
-            url: '/pages/index'
+            url: '/pages/info'
           })
         } else {
           let res = await wepy.showModal({

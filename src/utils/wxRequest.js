@@ -8,7 +8,7 @@ const TIMESTAMP = util.getCurrentTime()
 const SIGN = md5.hex_md5((TIMESTAMP + API_SECRET_KEY).toLowerCase())
 
 const wxRequest = async (params = {}, url) => {
-  tip.loading()
+  // tip.loading()
   let data = params.query || {}
   data.sign = SIGN
   data.time = TIMESTAMP
@@ -25,7 +25,7 @@ const wxRequest = async (params = {}, url) => {
       'token': token
     }
   })
-  tip.loaded()
+  // tip.loaded()
 
   if (res.data && res.data.msg !== 'ok') {
     wx.showToast({

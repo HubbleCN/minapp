@@ -1,6 +1,7 @@
 <style lang="less">
 @import './style/weui.less';
 @import './style/base.less';
+@import './style/iconfont.less';
 </style>
 
 <script>
@@ -52,6 +53,7 @@ export default class extends wepy.app {
 
       'example/searchbar'
     ],
+
     window: {
       navigationBarTitleText: '乐途',
       navigationBarTextStyle: 'black',

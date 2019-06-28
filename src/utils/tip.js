@@ -88,8 +88,9 @@ export default class Tips {
     wx.showToast({
       title: title,
       image: '../images/error.png',
+      icon: 'cancel',
       mask: true,
-      duration: 500
+      duration: 2000
     })
     // 隐藏结束回调
     if (onHide) {

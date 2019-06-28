@@ -20,37 +20,31 @@
   display: inline-flex;
 }
 
+._flex-direction(@value: row) {
+  -webkit-flex-direction: @value;
+  -moz-flex-direction: @value;
+  -ms-flex-direction: @value;
+  flex-direction: @value;
+}
 .flex-direction(@value: row) {
   -webkit-box-direction: normal;
   -webkit-box-orient: horizontal;
-  -webkit-flex-direction: @value;
-  -moz-flex-direction: @value;
-  -ms-flex-direction: @value;
-  flex-direction: @value;
+  ._flex-direction(@value);
 }
 .flex-direction(@value: row) when (@value = row-reverse) {
+  ._flex-direction(@value);
   -webkit-box-direction: reverse;
   -webkit-box-orient: horizontal;
-  -webkit-flex-direction: @value;
-  -moz-flex-direction: @value;
-  -ms-flex-direction: @value;
-  flex-direction: @value;
 }
 .flex-direction(@value: row) when (@value = column) {
+  ._flex-direction(@value);
   -webkit-box-direction: normal;
   -webkit-box-orient: vertical;
-  -webkit-flex-direction: @value;
-  -moz-flex-direction: @value;
-  -ms-flex-direction: @value;
-  flex-direction: @value;
 }
 .flex-direction(@value: row) when (@value = column-reverse) {
+  ._flex-direction(@value);
   -webkit-box-direction: reverse;
   -webkit-box-orient: vertical;
-  -webkit-flex-direction: @value;
-  -moz-flex-direction: @value;
-  -ms-flex-direction: @value;
-  flex-direction: @value;
 }
 
 .flex-wrap(@value: nowrap) {
@@ -85,96 +79,85 @@
   flex-flow: @values;
 }
 
-.align-items(@value: stretch) {
-  -webkit-box-align: @value;
-  -ms-flex-align: @value;
+._align-items(@value: stretch) {
   -webkit-align-items: @value;
   -moz-align-items: @value;
   align-items: @value;
 }
+.align-items(@value: stretch) {
+  -webkit-box-align: @value;
+  -ms-flex-align: @value;
+  ._align-items(@value);
+}
 .align-items(@value: stretch) when (@value = flex-start) {
-  .align-items(@value);
+  ._align-items(@value);
   -webkit-box-align: start;
   -ms-flex-align: start;
 }
 .align-items(@value: stretch) when (@value = flex-end) {
-  .align-items(@value);
+  ._align-items(@value);
   -webkit-box-align: end;
   -ms-flex-align: end;
 }
 
-.align-self(@value: auto) {
+._align-self(@value: auto) {
   -webkit-align-self: @value;
   -moz-align-self: @value;
-  -ms-flex-item-align: @value;
   align-self: @value;
 }
+.align-self(@value: auto) {
+  -ms-flex-item-align: @value;
+  ._align-self(@value);
+}
 .align-self(@value: auto) when (@value = flex-start) {
-  .align-self(@value);
+  ._align-self(@value);
   -ms-flex-item-align: start;
 }
 .align-self(@value: auto) when (@value = flex-end) {
-  .align-self(@value);
+  ._align-self(@value);
   -ms-flex-item-align: end;
 }
 
-.align-content(@value: stretch) {
+._align-content(@value: stretch) {
   -webkit-align-content: @value;
   -moz-align-content: @value;
-  -ms-flex-line-pack: @value;
   align-content: @value;
 }
+.align-content(@value: stretch) {
+  -ms-flex-line-pack: @value;
+  ._align-content(@value);
+}
 .align-content(@value: stretch) when (@value = flex-start) {
-  .align-content(@value);
+  ._align-content(@value);
   -ms-flex-line-pack: start;
 }
 .align-content(@value: stretch) when (@value = flex-end) {
-  .align-content(@value);
+  ._align-content(@value);
   -ms-flex-line-pack: end;
 }
 
-.justify-content(@value: stretch) {
-  -webkit-box-pack: @value;
-  -ms-flex-pack: @value;
+._justify-content(@value) {
   -webkit-justify-content: @value;
   -moz-justify-content: @value;
   justify-content: @value;
 }
+.justify-content(@value: stretch) {
+  ._justify-content(@value);
+  -webkit-box-pack: @value;
+  -ms-flex-pack: @value;
+}
 .justify-content(@value: stretch) when (@value = flex-start) {
-  .justify-content(@value);
+  ._justify-content(@value);
   -webkit-box-pack: start;
   -ms-flex-pack: start;
 }
 .justify-content(@value: stretch) when (@value = flex-end) {
-  .justify-content(@value);
+  ._justify-content(@value);
   -webkit-box-pack: end;
   -ms-flex-pack: end;
 }
 .justify-content(@value: stretch) when (@value = space-between) {
-  .justify-content(@value);
+  ._justify-content(@value);
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
-}
-
-.az-col {
-  .display-flex();
-  .flex-direction(column);
-  .justify-content(space-between);
-}
-
-.az-row {
-  .display-flex();
-  .justify-content(space-between);
-  padding: 0;
-  width: 100%;
-  .row-25 {
-    position: relative;
-    width: 25%;
-    padding: 5px;
-  }
-  .row-20 {
-    position: relative;
-    width: 20%;
-    padding: 5px;
-  }
 }

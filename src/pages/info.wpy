@@ -1,72 +1,69 @@
 <template>
   <view class="info">
     <view class="header">
-      <view class="header_content">
-        <image class="avatarUrl" src="{{avatarUrl}}"></image>
-        <view class="nickName cfff">{{nickName}}</view>
+      <view class="overlay-border">
+        <view class="overlay-bg">
+          <image src="{{avatarUrl}}"/>
+        </view>
+      </view>
+      <view class="z-user-info az-col">
+        <view class="z-user-info-1 az-row">
+          <image class="z-user-avatar" src="{{avatarUrl}}"/>
+          <view class="z-user-id">188****1234</view>
+          <view class="z-sign-btn">签到</view>
+        </view>
+
+        <view class="az-row">
+          <view class="z-ui-item az-col">
+            <view>5</view>
+            <view>我寄的</view>
+          </view>
+          <view class="z-ui-item az-col">
+            <view>8</view>
+            <view>我收的</view>
+          </view>
+          <view class="z-ui-item az-col">
+            <view>188</view>
+            <view>我的积分</view>
+          </view>
+        </view>
       </view>
     </view>
-    <view class="info_block">
-      <navigator class="item" url="/pages/register" wx:if="{{bShowBind}}">
+
+    <view class="az_block">
+      <navigator class="item" url="/pages/register" wx:if="{{bShowBind}}" hover-class="weui-cell_active">
         <view>
           <view class="item_content">
-            <image class="item_img" src="../images/icon_my_01.png"></image>
-            <view class="text" style="color:#fe2a2a">绑定手机号</view>
+            <i class="iconfont icon-icon-test7"></i>
+            <view class="text">绑定手机号</view>
           </view>
-          <view class="tip">绑定手机号可更好的让我们服务好您！</view>
         </view>
-        <view class="arrow">&gt;</view>
+        <view class="arrow"></view>
       </navigator>
-      <navigator class="item" url="/pages/order">
+
+      <navigator class="item" url="/pages/order" hover-class="weui-cell_active">
         <view class="item_content">
-          <image class="item_img" src="../images/icon_my_02.png"></image>
+          <i class="iconfont icon-icon_shakehands"></i>
           <view class="text">全部订单</view>
         </view>
-        <view class="arrow">&gt;</view>
+        <view class="arrow"></view>
       </navigator>
-      <navigator class="item" url="/pages/reorder">
+      <navigator class="item" url="/pages/reorder" hover-class="weui-cell_active">
         <view class="item_content">
-          <image class="item_img" src="../images/icon_my_02.png"></image>
+          <i class="iconfont icon-icon-test35"></i>
           <view class="text">补货订单</view>
         </view>
-        <view class="arrow">&gt;</view>
-      </navigator>
-      <navigator class="item" url="/pages/points">
-        <view class="item_content">
-          <image class="item_img" src="../images/icon_my_03.png"></image>
-          <view class="text">我的积分</view>
-        </view>
-        <view class="arrow">&gt;</view>
-      </navigator>
-      <navigator class="item" url="/pages/collection?type=0">
-        <view class="item_content">
-          <image class="item_img" src="../images/icon_my_04.png"></image>
-          <view class="text">我的足迹</view>
-        </view>
-        <view class="arrow">&gt;</view>
-      </navigator>
-      <navigator class="item" url="/pages/collection?type=1">
-        <view class="item_content">
-          <image class="item_img" src="../images/icon_my_05.png"></image>
-          <view class="text">我的收藏</view>
-        </view>
-        <view class="arrow">&gt;</view>
+        <view class="arrow"></view>
       </navigator>
     </view>
-    <view class="info_block">
-      <navigator class="item" url="/pages/messages">
+
+    <view class="az_block">
+      <navigator class="item" url="/pages/collection?type=0" hover-class="weui-cell_active">
         <view class="item_content">
-          <image class="item_img" src="../images/icon_my_06.png"></image>
-          <view class="text">我的消息</view>
+          <i class="iconfont icon-icon_shezhi"></i>
+          <view class="text">我的足迹</view>
         </view>
-        <view class="arrow">&gt;</view>
-      </navigator>
-      <navigator class="item" url="/pages/setting">
-        <view class="item_content">
-          <image class="item_img" src="../images/icon_my_07.png"></image>
-          <view class="text">设置</view>
-        </view>
-        <view class="arrow">&gt;</view>
+        <view class="arrow"></view>
       </navigator>
     </view>
   </view>
@@ -75,11 +72,11 @@
 import wepy from 'wepy'
 import api from '@/api/api'
 import tip from '@/utils/tip'
-import { USER_INFO, USER_SPECICAL_INFO } from '@/utils/constant'
+import { USER_INFO, USER_SPECICAL_INFO, SUCCESS_CODE } from '@/utils/constant'
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '我',
-    navigationBarBackgroundColor: '#1890ff',
+    //navigationBarBackgroundColor: '#1890ff',
     navigationBarTextStyle: 'white'
   }
   components = {}
@@ -89,18 +86,19 @@ export default class Index extends wepy.page {
     nickName: '',
     bShowBind: false
   }
-  async getUserInfo (phone, code) {
+  async getUserInfo (phon, code) {
     let that = this
     let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {}
-    let openId = userSpecialInfo.openid
+    let openId = userSpecialInfo.openId
     const json = await api.getUserInfo({
+      method: 'POST',
       query: {
         openId: openId
       }
     })
 
-    if (json.data.code === '0') {
-      if (json.data.user.mobile.length > 0) {
+    if (json.data.code === SUCCESS_CODE) {
+      if (json.data.data.userId) {
         this.bShowBind = false
       } else {
         this.bShowBind = true
@@ -128,49 +126,77 @@ export default class Index extends wepy.page {
 </script>
 <style lang="less">
 .header {
-  background-color: #1890ff;
-  color: #ffffff;
+  height: 390rpx;
+  position: relative;
+  .overlay-border {
+    overflow: hidden;
+    border-radius: 0 0 20% 20%;
+    .overlay-bg {
+      height: 320rpx;
+      border-radius: 0 0 20% 20%;
+      border: 2rpx solid #000;
+      overflow: hidden;
+      filter: blur(16rpx);
 
-  .avatarUrl {
-    width: 110rpx;
-    height: 110rpx;
-    border-radius: 5px;
-    margin-right: 20rpx;
-  }
-}
-
-.header_content {
-  width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  padding-top: 48rpx;
-}
-
-.nickName {
-  font-size: 30rpx;
-  padding-top: 15rpx;
-}
-
-.weui-cells {
-  .weui-cell {
-    padding: 34rpx 28rpx;
-    align-items: unset;
-
-    .weui-cell__img {
-      width: 42rpx;
-      height: 42rpx;
+      image {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
-  .weui-cell__bd {
-    margin-left: 20rpx;
 
-    .tip {
-      color: #999;
-      font-size: 24rpx;
-      margin-top: 20rpx;
-    }
+  .z-user-info {
+    height: 280rpx;
+    width: 650rpx;
+    position: absolute;
+    top: -280rpx;
+    margin: 0 auto;
+    background: white;
+    border-radius: 16rpx;
+    padding: 30rpx;
+    box-shadow: -4rpx 4rpx 20rpx 0 rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .z-user-info-1 {
+    flex: 1;
+    align-items: center;
+  }
+  .z-ui-item {
+    flex: 1;
+    padding: 0 10rpx;
+    font-size: 32rpx;
+    line-height: 1.8;
+  }
+  .z-user-avatar {
+    height: 120rpx;
+    width: 120rpx;
+    border-radius: 50%;
+  }
+
+  .z-user-id {
+    flex: 1;
+    font-size: 36rpx;
+    font-weight: bold;
+    text-align: left;
+    margin: 0 20rpx;
+  }
+
+  .z-sign-btn {
+    color: white;
+    background: #e22727;
+    width: 180rpx;
+    height: 60rpx;
+    line-height: 60rpx;
+    font-size: 32rpx;
+    font-weight: bold;
+    border-radius: 30rpx 0 0 30rpx;
+    position: absolute;
+    right: 0;
   }
 }
+
 .info_block {
   margin-top: 10rpx;
   .item {

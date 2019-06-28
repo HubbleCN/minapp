@@ -1,93 +1,100 @@
 .setTopLine(@c: #C7C7C7) {
-    content: " ";
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    height: 1px;
-    border-top: 1rpx solid @c;
-    color: @c;
+  content: ' ';
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 1px;
+  border-top: 1rpx solid @c;
+  color: @c;
 }
 
 .setBottomLine(@c: #C7C7C7) {
-    content: " ";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    height: 1px;
-    border-bottom: 1rpx solid @c;
-    color: @c;
+  content: ' ';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 1px;
+  border-bottom: 1rpx solid @c;
+  color: @c;
 }
 
 .setLeftLine(@c: #C7C7C7) {
-    content: " ";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 1px;
-    bottom: 0;
-    border-left: 1rpx solid @c;
-    color: @c;
+  content: ' ';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  bottom: 0;
+  border-left: 1rpx solid @c;
+  color: @c;
 }
 
 .setRightLine(@c: #C7C7C7) {
-    content: " ";
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 1px;
-    bottom: 0;
-    border-right: 1rpx solid @c;
-    color: @c;
+  content: ' ';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 1px;
+  bottom: 0;
+  border-right: 1rpx solid @c;
+  color: @c;
 }
 
-.setHalfLine() {
-    content: " ";
-    position: absolute;
-    color: #D9D9D9;
-    -webkit-transform-origin: 0 100%;
-    transform-origin: 0 100%;
-}
 .setHalfLine(@value) when (@value = top) {
-    .setHalfLine();
-    left: 0;
-    top: 0;
-    right: 0;
-    height: 1px;
-    border-top: 1px solid #D9D9D9;
-    -webkit-transform: scaleY(0.5);
-    transform: scaleY(0.5);
-} 
+  content: ' ';
+  position: absolute;
+  color: #d9d9d9;
+  -webkit-transform-origin: 0 100%;
+  transform-origin: 0 100%;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 1px;
+  border-top: 1px solid #d9d9d9;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}
 .setHalfLine(@value) when (@value = left) {
-    .setHalfLine();
-    left: 0;
-    top: 0;
-    width: 1px;
-    bottom: 0;
-    border-left: 1px solid #D9D9D9;
-    -webkit-transform: scaleX(0.5);
-    transform: scaleX(0.5);
-} 
+  content: ' ';
+  position: absolute;
+  color: #d9d9d9;
+  -webkit-transform-origin: 0 100%;
+  transform-origin: 0 100%;
+  left: 0;
+  top: 0;
+  width: 1px;
+  bottom: 0;
+  border-left: 1px solid #d9d9d9;
+  -webkit-transform: scaleX(0.5);
+  transform: scaleX(0.5);
+}
 .setHalfLine(@value) when (@value = right) {
-    .setHalfLine();
-    right: 0;
-    top: 0;
-    width: 1px;
-    bottom: 0;
-    border-right: 1px solid #D9D9D9;
-    -webkit-transform: scaleX(0.5);
-    transform: scaleX(0.5);
-} 
+  content: ' ';
+  position: absolute;
+  color: #d9d9d9;
+  -webkit-transform-origin: 0 100%;
+  transform-origin: 0 100%;
+  right: 0;
+  top: 0;
+  width: 1px;
+  bottom: 0;
+  border-right: 1px solid #d9d9d9;
+  -webkit-transform: scaleX(0.5);
+  transform: scaleX(0.5);
+}
 .setHalfLine(@value) when (@value = bottom) {
-    .setHalfLine();
-    left: 0;
-    bottom: 0;
-    right: 0;
-    height: 1px;
-    border-bottom: 1px solid #D9D9D9;
-    -webkit-transform: scaleX(0.5);
-    transform: scaleX(0.5);
-    -webkit-transform: scaleY(0.5);
-    transform: scaleY(0.5);
-} 
+  content: ' ';
+  position: absolute;
+  color: #d9d9d9;
+  -webkit-transform-origin: 0 100%;
+  transform-origin: 0 100%;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 1px;
+  border-bottom: 1px solid #d9d9d9;
+  -webkit-transform: scaleY(0.5);
+  transform: scaleY(0.5);
+}

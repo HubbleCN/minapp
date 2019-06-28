@@ -67,7 +67,7 @@ export default class AddressList extends wepy.component {
       }
     })
 
-    if (json.data.code == 0) {
+    if (json.data.code === 0) {
       console.log('删除成功')
       this.$emit('currentPage', 0)
       this.$emit('refreshAddList', 'hehe')

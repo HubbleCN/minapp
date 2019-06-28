@@ -41,7 +41,7 @@ export default class WepySignTime extends wepy.component {
         openId: openId
       }
     })
-    if (json.data.code == 0) {
+    if (json.data.code === 0) {
       this.list = json.data.list
       console.log('console.log(this.list);')
       console.log(this.list)

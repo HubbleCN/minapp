@@ -40,7 +40,7 @@ export default class filterBar extends wepy.component {
     },
     orderBy (e) {
       let that = this
-      if (that.data.currentType == e.target.dataset.current) {
+      if (that.data.currentType === e.target.dataset.current) {
         if (e.target.dataset.current !== 'price') {
           return false
         }

@@ -21,3 +21,5 @@ export const ADDRESS_ID = 'addressId'
 export const SEL_CLASS_CODE = 'selClassCode'
 
 export const TOKEN = 'token'
+
+export const SUCCESS_CODE = '1'
