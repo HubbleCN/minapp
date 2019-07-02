@@ -20,6 +20,9 @@ export default class extends wepy.app {
       'pages/authorize',
       'pages/index',
       'pages/info',
+      'pages/home',
+      'pages/search',
+      'pages/carline',
 
       'example/index',
       'example/button',
@@ -63,7 +66,7 @@ export default class extends wepy.app {
     },
     tabBar: {
       color: '#8a8a8a',
-      selectedColor: '#1890ff',
+      selectedColor: '#e22727',
       backgroundColor: '#FFFFFF',
       list: [
         {
@@ -74,15 +77,27 @@ export default class extends wepy.app {
         },
         {
           pagePath: 'example/index',
-          text: '发布',
+          text: 'WEUI',
           iconPath: 'images/icon/release.png',
           selectedIconPath: 'images/icon/release-selected.png'
+        },
+        {
+          pagePath: 'pages/home',
+          text: '首页',
+          iconPath: 'images/icon/send.png',
+          selectedIconPath: 'images/icon/send-s.png'
+        },
+        {
+          pagePath: 'pages/search',
+          text: '搜索',
+          iconPath: 'images/icon/search.png',
+          selectedIconPath: 'images/icon/search-s.png'
         },
         {
           pagePath: 'pages/info',
           text: '我',
           iconPath: 'images/icon/mine.png',
-          selectedIconPath: 'images/icon/mine-selected.png'
+          selectedIconPath: 'images/icon/mine-s.png'
         }
       ]
     },

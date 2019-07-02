@@ -74,7 +74,7 @@ export default class Authorize extends wepy.page {
         }
       }
       wepy.switchTab({
-        url: '/pages/info'
+        url: '/pages/home'
       })
     }
   }
@@ -100,7 +100,7 @@ export default class Authorize extends wepy.page {
             wepy.setStorageSync(USER_SPECICAL_INFO, rd)
           }
           wepy.switchTab({
-            url: '/pages/info'
+            url: '/pages/home'
           })
         } else {
           let res = await wepy.showModal({

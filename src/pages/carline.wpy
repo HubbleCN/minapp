@@ -1,0 +1,165 @@
+<!--  -->
+<template>
+  <view>
+    <view class="weui-cells__title">表单</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+              <view class="weui-label">起点</view>
+          </view>
+          <view class="weui-cell__bd">
+              <input class="weui-input" value="{{origin.locationName}}" placeholder="请选择出发地" bindfocus="chooseOriginLocation" />
+          </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+              <view class="weui-label">终点</view>
+          </view>
+          <view class="weui-cell__bd">
+              <input class="weui-input" value="{{destination.locationName}}" placeholder="请选择目的地" bindfocus="chooseDestinationLocation" />
+          </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+              <view class="weui-label">车牌</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input class="weui-input" value="{{carnum}}" placeholder="请填写车牌" bindfocus="showCNModal" />
+            <carNum :show.sync="showCarnumModal" @fillCarNum.user="fillCarNum">请填写车牌</carNum>
+          </view>
+
+
+      </view>
+      <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+              <view class="weui-label">座位数</view>
+          </view>
+          <view class="weui-cell__bd">
+              <input class="weui-input" value="{{count}}" type="number" placeholder="请输入人数" />
+          </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+              <view class="weui-label">qq</view>
+          </view>
+          <view class="weui-cell__bd">
+              <input class="weui-input" placeholder="请输入qq" />
+          </view>
+      </view>
+
+      <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+              <view class="weui-label">日期</view>
+          </view>
+          <view class="weui-cell__bd">
+              <picker mode="date" value="{{date}}" start="2015-09-01" end="2017-09-01" @change="bindDateChange">
+                  <view class="weui-input">{{date}}</view>
+              </picker>
+          </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+              <view class="weui-label">时间</view>
+          </view>
+          <view class="weui-cell__bd">
+              <picker mode="time" value="{{time}}" start="09:01" end="21:01" @change="bindTimeChange">
+                  <view class="weui-input">{{time}}</view>
+              </picker>
+          </view>
+      </view>
+      <view class="weui-cell weui-cell_input weui-cell_vcode">
+          <view class="weui-cell__hd">
+              <view class="weui-label">验证码</view>
+          </view>
+          <view class="weui-cell__bd">
+              <input class="weui-input" placeholder="请输入验证码" />
+          </view>
+          <view class="weui-cell__ft">
+              <image class="weui-vcode-img" src="../images/vcode.png" style="width: 108px"/>
+          </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import util from'@/utils/util'
+  import {
+    CAR_NUM
+  } from '@/utils/constant'
+  import CarNumber from './car_number'
+  export default class CarLine extends wepy.page {
+    config = {
+      navigationBarTitleText: ''
+    };
+
+    data = {
+      origin: {},
+      destination: {},
+      count: 1,
+      price: 0,
+      carInfo: '',
+      carnum:'',
+      showCarnumModal: false
+    };
+
+    components = {
+      carNum: CarNumber
+    };
+
+    methods = {
+      showCNModal() {
+        console.log('showCNModal')
+        this.showCarnumModal = true
+        this.$apply()
+      },
+      fillCarNum(carnum, evt){
+        this.showCarnumModal = false
+        this.carnum = carnum.join('')
+      },
+      chooseOriginLocation() {
+        const that = this
+        wepy.chooseLocation({
+          success(res) {
+            console.log(res)
+            that.origin = {
+                location: util.formatLocation(res.longitude, res.latitude),
+                locationAddress: res.address,
+                locationName: res.name
+              };
+          }
+        })
+      },
+      chooseDestinationLocation() {
+        const that = this
+        wepy.chooseLocation({
+          success(res) {
+            console.log(res)
+            that.destination = {
+                location: util.formatLocation(res.longitude, res.latitude),
+                locationAddress: res.address,
+                locationName: res.name
+              };
+          }
+        })
+      }
+    };
+
+    events = {};
+
+    watch = {};
+
+    computed = {};
+
+    onLoad() { };
+
+    onShow() {
+    };
+
+
+  }
+</script>
+
+<style lang='less'>
+</style>

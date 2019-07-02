@@ -1,0 +1,136 @@
+<!-- 首页 -->
+<template>
+  <view class='container'>
+    <view class="sliders-zone">
+      <swiper class="sliders" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}"
+        interval="{{interval}}" duration="{{duration}}" circular
+        indicator-color="rgba(255, 255, 255, .3)" indicator-active-color="#FFFFFF">
+            <block wx:for="{{imgUrls}}" wx:key="*this">
+                <swiper-item>
+                    <image src="{{item}}" class="slide-image"></image>
+                </swiper-item>
+            </block>
+        </swiper>
+    </view>
+
+    <view class="main-menus">
+      <view class="az-grids">
+        <navigator class="az-grid col-50" url="/pages/carline" hover-class="az-grid_active">
+          <view class="az-row">
+            <i class="iconfont icon-car"></i>
+            <view class="az-col main-menu-text">
+              <view class="text">车找人</view>
+              <view class="tip">发布拼车信息</view>
+            </view>
+          </view>
+        </navigator>
+        <navigator class="az-grid col-50" url="/pages/car_number" hover-class="az-grid_active">
+          <view class="az-row">
+            <i class="iconfont icon-navicon-rqfz"></i>
+            <view class="az-col main-menu-text">
+              <view class="text">人找车</view>
+              <view class="tip">发布乘车信息</view>
+            </view>
+          </view>
+        </navigator>
+      </view>
+
+    </view>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Home extends wepy.page {
+    config = {
+    }
+
+    data = {
+      imgUrls: [
+        'https://images.unsplash.com/photo-1551334787-21e6bd3ab135?w=640',
+        'https://images.unsplash.com/photo-1551214012-84f95e060dee?w=640',
+        'https://images.unsplash.com/photo-1551446591-142875a901a1?w=640'
+      ],
+      indicatorDots: false,
+      autoplay: true,
+      interval: 4000,
+      duration: 1000
+    };
+
+    components = {
+
+    };
+
+    methods = {};
+
+    events = {};
+
+    watch = {};
+
+    computed = {};
+
+    onLoad() { };
+
+    onShow() { };
+  }
+</script>
+
+<style lang='less'>
+
+.sliders-zone {
+  position: relative;
+  width: 100%;
+  border-radius: 0 0 5% 5%;
+  overflow: hidden;
+
+ .sliders {
+    width: 100%;
+    height: 400rpx;
+  }
+
+  .slide-image {
+    width: 100%;
+    //height: 500rpx;
+  }
+}
+
+.main-menus {
+  width: 710rpx;
+  margin: -60rpx auto 0 auto;
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+
+  .az-grid {
+    background: rgba(255,255,255,.9);
+    padding: 40rpx;
+  }
+
+  .az-grid_active {
+    background-color: rgba(236,236,236,.9);
+  }
+
+  .iconfont {
+    font-size: 64rpx;
+    color: #e22727;
+    align-items: center;
+  }
+
+  .main-menu-text {
+    flex: 1;
+    margin-left: 30rpx;
+  }
+
+  .text {
+    font-weight: 400;
+  }
+
+  .tip {
+    font-size: 28rpx;
+    color: #8a8a8a;
+  }
+}
+
+
+</style>

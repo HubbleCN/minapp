@@ -1,0 +1,380 @@
+<!--  -->
+<template>
+  <view wx:if="{{show}}">
+    <view class='page'>
+          <!-- 车牌号码输入框 -->
+        <view class="carNumber">
+          <view class="weui-cells__title">请输入车牌号码后在使用</view>
+          <!-- 车牌号头两位 -->
+          <view class="carNumber-items">
+            <view class="carNumber-items-box" bindtap='openKeyboard'>
+              <view class="carNumber-items-province carNumber-items-box-list">{{carnum[0] || ''}}</view>
+              <view class="carNumber-items-En carNumber-items-box-list">{{carnum[1] || ''}}</view>
+            </view>
+            <!-- 常规 -->
+            <view class="carNumber-item" bindtap='openKeyboard'>{{carnum[2] || ''}}</view>
+            <view class="carNumber-item" bindtap='openKeyboard'>{{carnum[3] || ''}}</view>
+            <view class="carNumber-item" bindtap='openKeyboard'>{{carnum[4] || ''}}</view>
+            <view class="carNumber-item" bindtap='openKeyboard'>{{carnum[5] || ''}}</view>
+            <view class="carNumber-item" bindtap='openKeyboard'>{{carnum[6] || ''}}</view>
+            <!-- 新能源 -->
+            <view class="carNumber-item {{showNewPower ? '': 'carNumber-item-newpower'}}">
+              <view wx:if="{{!showNewPower}}" bindtap='showPowerBtn'>
+                <view class="carNumber-newpower-add">+</view>
+                <view>新能源</view>
+              </view>
+              <view wx:if="{{showNewPower}}" bindtap='openKeyboard'>
+                {{carnum[7]}}
+              </view>
+            </view>
+          </view>
+        </view>
+        <!-- 提交车牌 -->
+        <button class="carNumberBtn" @tap='submitNumber' style="background: #333333;color:#fff;" type="default">确定</button>
+
+        <!-- 虚拟键盘 -->
+        <view class="keyboard" hidden='{{!KeyboardState}}'>
+          <view class="keyboardClose">
+            <view class="keyboardClose_btn" bindtap='closeKeyboard'>关闭</view>
+          </view>
+          <!-- 省份简写键盘 -->
+          <view class="keyboard-item" hidden="{{carnum[0]}}">
+            <view class="keyboard-line" wx:for="{{provinces}}" wx:key="{{index}}">
+              <view class="keyboard-btn" wx:for="{{item}}" wx:key="{{index}}" data-val="{{itemlist}}" wx:for-item="itemlist"
+                bindtap='bindChoose' hover-class="board_bg" hover-start-time="0" hover-stay-time="80">{{itemlist}}</view>
+            </view>
+            <view class="keyboard-del" bindtap='bindDelChoose' hover-class="board_bg_spec" hover-start-time="0" hover-stay-time="80">
+              <i class="iconfont icon-backspace keyboard-del-font"></i>
+            </view>
+          </view>
+          <!-- 车牌号码选择键盘 -->
+          <view class="keyboard-item iscarnumber" hidden="{{!carnum[0]}}">
+            <view class="keyboard-line" wx:for="{{numbers}}" wx:key="{{index}}">
+              <view class="keyboard-btn" wx:for="{{item}}" wx:key="{{index}}" data-val="{{itemlist}}" wx:for-item="itemlist"
+                bindtap='bindChoose' hover-class="board_bg" hover-start-time="0" hover-stay-time="80">{{itemlist}}</view>
+            </view>
+            <view class="keyboard-del" bindtap='bindDelChoose' hover-class="board_bg_spec" hover-start-time="0" hover-stay-time="80">
+              <i class="iconfont icon-backspace keyboard-del-font"></i>
+            </view>
+          </view>
+        </view>
+    </view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class CarNumber extends wepy.component {
+
+    props = {
+      show: {
+        type: Boolean,
+        default: false,
+        twoWay: true
+      }
+    };
+    data = {
+      // 省份简写
+      provinces: [
+        ['京', '沪', '粤', '津', '冀', '晋', '蒙', '辽', '吉', '黑'],
+        ['苏', '浙', '皖', '闽', '赣', '鲁', '豫', '鄂', '湘'],
+        ['桂', '琼', '渝', '川', '贵', '云', '藏'],
+        ['陕', '甘', '青', '宁', '新'],
+      ],
+      // 车牌输入
+      numbers: [
+        ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+        ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+        ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+        ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
+      ],
+      carnum: [],
+      showNewPower: false,
+      KeyboardState: true
+    };
+
+    components = {};
+
+    methods = {
+// 选中点击设置
+      bindChoose(e) {
+        if (!this.carnum[6] || this.showNewPower) {
+          var arr = [];
+          arr[0] = e.target.dataset.val;
+          if(this.carnum.length===1 && !isNaN(arr[0])) {
+            //第二位不允许输入数字
+          } else {
+            this.carnum = this.carnum.concat(arr)
+          }
+        }
+      },
+      bindDelChoose() {
+        if (this.carnum.length !== 0) {
+          this.carnum.splice(this.carnum.length - 1, 1);
+          this.carnum = this.carnum;
+        }
+      },
+      showPowerBtn() {
+        this.showNewPower = true;
+        this.KeyboardState = true;
+      },
+      closeKeyboard() {
+        this.KeyboardState = false;
+      },
+      openKeyboard() {
+        this.KeyboardState = true;
+      },
+      // 提交车牌号码
+      submitNumber() {
+        if (this.carnum[6]) {
+          // 跳转到tabbar页面
+          this.$emit('fillCarNum', this.carnum)
+          this.show = false;
+        } else {
+          this.show = false;
+        }
+      },
+      closeKeyboardModal() {
+        this.show = false;
+      },
+      showKeyboardModal() {
+        this.show = true;
+      }
+    };
+
+    events = {};
+
+    watch = {};
+
+    computed = {};
+
+
+
+    /**
+     * 生命周期函数--监听页面加载
+     */
+    onLoad(options) {
+      this.showModal = false;
+    };
+
+    /**
+     * 生命周期函数--监听页面初次渲染完成
+     */
+    onReady() {
+
+    };
+
+    /**
+     * 生命周期函数--监听页面显示
+     */
+    onShow() {
+
+    };
+
+    /**
+     * 生命周期函数--监听页面隐藏
+     */
+    onHide() {
+
+    };
+
+    /**
+     * 生命周期函数--监听页面卸载
+     */
+    onUnload() {
+
+    };
+
+    /**
+     * 页面相关事件处理函数--监听用户下拉动作
+     */
+    onPullDownRefresh() {
+
+    };
+
+    /**
+     * 页面上拉触底事件的处理函数
+     */
+    onReachBottom() {
+
+    };
+
+    /**
+     * 用户点击右上角分享
+     */
+    onShareAppMessage() {
+
+    }
+  }
+</script>
+
+<style lang='less'>
+  .page{
+  // background: #fff;
+  // position: absolute;
+  // top:0;
+  // bottom:0;
+  // width: 100%;
+  z-index: 9999;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+
+}
+.weui-cells__title{
+  margin-top:.77em;
+margin-bottom:.3em;
+padding-left:15px;
+padding-right:15px;
+color:#999;
+font-size:14px;
+
+}
+/* 虚拟键盘 */
+.keyboard{
+  height: auto;
+  background: #d1d5d9;
+  position: fixed;
+  bottom:0;
+  width: 100%;
+  left:0;
+}
+.keyboard-item{
+  padding:10rpx 0 5rpx 0;
+  position: relative;
+  display: block;
+}
+/* 关闭虚拟键盘 */
+.keyboardClose{
+  height: 70rpx;
+  background-color: #f7f7f7;
+  overflow: hidden;
+}
+.keyboardClose_btn{
+  float: right;
+  line-height: 70rpx;
+  font-size: 15px;
+  padding-right: 30rpx;
+}
+/* 虚拟键盘-省缩写 */
+
+/* 虚拟键盘-行 */
+.keyboard-line{
+  margin:0 auto;
+  text-align: center;
+}
+.iscarnumber{
+  .keyboard-line {
+    margin-left: 5rpx;
+  }
+}
+/* 虚拟键盘-单个按钮 */
+.keyboard-btn{
+  font-size: 17px;
+  color: #333333;
+  background: #fff;
+  display: inline-block;
+  padding:18rpx 0;
+  width: 63rpx;
+  text-align: center;
+  box-shadow: 0 2rpx 0 0 #999999;
+  border-radius: 10rpx;
+  margin:5rpx 6rpx;
+}
+/* 虚拟键盘-删除按钮 */
+.keyboard-del{
+  font-size: 17px;
+  color: #333333;
+  background: #A7B0BC;
+  display: inline-block;
+  padding: 4rpx 20rpx;
+  box-shadow: 0 2rpx 0 0 #999999;
+  border-radius: 10rpx;
+  margin:5rpx;
+  position: absolute;
+  bottom:6rpx;
+  right: 6rpx;
+}
+.keyboard-del-font{
+  font-size:25px;
+}
+
+/* 车牌号码 */
+.carNumber-items{
+  text-align: center;
+}
+.carNumber-items-box{
+  width: 158rpx;
+  height: 90rpx;
+  border: 2rpx solid #CCCCCC;
+  border-radius: 4rpx;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  margin-right: 30rpx;
+}
+.carNumber-items-box-list{
+  width: 76rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+  text-align: center;
+  display: inline-block;
+  font-size: 18px;
+  margin:10rpx 0;
+  vertical-align: middle;
+}
+.carNumber-items-province{
+  border-right: 1rpx solid #ccc;
+}
+.carNumber-items-box::after{
+  content: "";
+  width: 6rpx;
+  height: 6rpx;
+  position: absolute;
+  right: -22rpx;
+  top: 40rpx;
+  border-radius: 50%;
+  background-color: #ccc;
+}
+.carNumber-item{
+  width: 76rpx;
+  height: 90rpx;
+  font-size: 18px;
+  text-align: center;
+  border: 2rpx solid #CCCCCC;
+  border-radius: 4rpx;
+  line-height: 90rpx;
+  display: inline-block;
+  margin:0 4rpx;
+  vertical-align: middle;
+}
+/* 新能源 */
+.carNumber-item-newpower{
+  border: 2rpx dashed #A8BFF3;
+  background-color: #F6F9FF;
+  color: #A8BFF3;
+  font-size: 12px;
+  line-height: 45rpx;
+}
+.carNumber-newpower-add{
+  font-size: 18px;
+}
+
+/* 确认按钮 */
+.carNumberBtn{
+  border-radius: 4rpx;
+  margin:80rpx 40rpx;
+}
+
+.board_bg {
+  box-shadow: 0 0 0 #e5e5e5;
+  background: #e5e5e5;
+}
+
+.board_bg_spec {
+  box-shadow: 0 0 0 #e5e5e5;
+}
+</style>
