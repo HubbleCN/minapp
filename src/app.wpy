@@ -22,7 +22,7 @@ export default class extends wepy.app {
       'pages/info',
       'pages/home',
       'pages/search',
-      'pages/carline',
+      'pages/carline/carline_add',
 
       'example/index',
       'example/button',
@@ -109,7 +109,8 @@ export default class extends wepy.app {
   };
 
   globalData = {
-    userInfo: null
+    userInfo: null,
+    isFullScreen: false
   };
 
   constructor() {
@@ -151,6 +152,16 @@ export default class extends wepy.app {
 
   onLaunch() {
     this.testAsync()
+    this.checkFullScreen()
+  }
+
+  checkFullScreen() {
+    const that = this
+    let systemInfo = wepy.getSystemInfoSync()
+    if (systemInfo.screenHeight - systemInfo.windowHeight - systemInfo.statusBarHeight - 32 > 72) {
+      //  全面屏
+      that.isFullScreen = true
+    }
   }
 
   sleep(s) {

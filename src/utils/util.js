@@ -207,6 +207,10 @@ function compareVersion(v1, v2) {
   return 0
 }
 
+function debug(v) {
+  console.log(JSON.stringify(v))
+}
+
 module.exports = {
   getCurrentTime: getCurrentTime,
   objLength: objLength,
@@ -223,5 +227,6 @@ module.exports = {
   formatLocation,
   fib,
   formatDateTime,
-  compareVersion
+  compareVersion,
+  debug
 }

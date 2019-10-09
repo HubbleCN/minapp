@@ -1,5 +1,7 @@
 @import './base/fn.less';
 
+@azuiPrimaryColor: #e22727;
+
 .container {
   height: 100%;
   display: flex;
@@ -52,7 +54,6 @@ page {
   .display-flex();
   .justify-content(space-between);
   padding: 0;
-  width: 100%;
   .col-25 {
     position: relative;
     width: 25%;
@@ -145,7 +146,7 @@ page {
   .az-grid {
     position: relative;
     padding: 20rpx 10rpx;
-    width: 25%;
+    width: 100%;
     &:before {
       .setHalfLine(right);
     }
@@ -168,10 +169,36 @@ page {
   }
 
   .az-grid_active {
-    background-color: #ECECEC;
+    background-color: #ececec;
   }
+}
 
+.bottom-bar {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 1000;
+  width: 750rpx;
+  height: 100rpx;
+  display: flex;
+  background: white;
 
+  .col {
+    flex: 1;
+    .display-flex();
+    .align-items(center);
+    padding: 0 20rpx
+  }
+}
 
-
+.fix-full-screen {
+  bottom: 68rpx !important;
+}
+.fix-full-screen::after {
+  content: ' ';
+  position: fixed;
+  bottom: 0 !important;
+  height: 68rpx !important;
+  width: 100%;
+  background: white;
 }

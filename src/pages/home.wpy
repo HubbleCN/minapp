@@ -15,21 +15,12 @@
 
     <view class="main-menus">
       <view class="az-grids">
-        <navigator class="az-grid col-50" url="/pages/carline" hover-class="az-grid_active">
+        <navigator class="az-grid col" url="/pages/carline/carline_add" hover-class="az-grid_active">
           <view class="az-row">
             <i class="iconfont icon-car"></i>
             <view class="az-col main-menu-text">
               <view class="text">车找人</view>
               <view class="tip">发布拼车信息</view>
-            </view>
-          </view>
-        </navigator>
-        <navigator class="az-grid col-50" url="/pages/car_number" hover-class="az-grid_active">
-          <view class="az-row">
-            <i class="iconfont icon-navicon-rqfz"></i>
-            <view class="az-col main-menu-text">
-              <view class="text">人找车</view>
-              <view class="tip">发布乘车信息</view>
             </view>
           </view>
         </navigator>
