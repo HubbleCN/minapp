@@ -2,22 +2,18 @@ import {
   wxRequest
 } from '@/utils/wxRequest'
 
-import wepy from 'wepy'
-
-const appId = wepy.getAccountInfoSync().miniProgram.appId
-
 const serverUrl = `http://localhost:8082/mpweb`
-
-const baseUrl = `${serverUrl}/wx/user/${appId}`
 
 const env = '-test' // -dev 或者 -test
 const apiMall = 'https://sujiefs.com/'
 // const apiMall = 'http://localhost:8080/'
 
 // 微信用户登录
-const wxLogin = (params) => wxRequest(params, `${baseUrl}/login`)
+const wxLogin = (params) => wxRequest(params, `/user/login`)
 // 用户是否绑定手机号
-const getUserInfo = (params) => wxRequest(params, `${baseUrl}/getUserInfo`)
+const getUserInfo = (params) => wxRequest(params, `/user/getUserInfo`)
+// 发布线路信息
+const releaseRoute = (params) => wxRequest(params, `/route/release`)
 
 /**
  * 获取发现好商品接口
@@ -157,6 +153,7 @@ const getAdList = (params) => wxRequest(params, apiMall + '/api/adverts/list')
 export default {
   serverUrl,
   wxLogin,
+  releaseRoute,
   hostGoodsList,
   getDiscoverList,
   getHomeDisvocerList,

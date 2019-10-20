@@ -86,28 +86,23 @@ export default class Index extends wepy.page {
     nickName: '',
     bShowBind: false
   }
-  async getUserInfo (phon, code) {
+  getUserInfo (phon, code) {
     let that = this
     let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {}
     let openId = userSpecialInfo.openId
-    const json = await api.getUserInfo({
+    api.getUserInfo({
       method: 'POST',
       query: {
         openId: openId
+      },
+      success: function(res){
+        if (res.data.userId) {
+          that.bShowBind = false
+        } else {
+          that.bShowBind = true
+        }
       }
     })
-
-    if (json.data.code === SUCCESS_CODE) {
-      if (json.data.data.userId) {
-        this.bShowBind = false
-      } else {
-        this.bShowBind = true
-      }
-      that.$apply()
-    } else {
-      tip.error(json.data.msg)
-    }
-    that.showLoading = false
   }
 
   onLoad () {

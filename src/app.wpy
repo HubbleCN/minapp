@@ -1,193 +1,204 @@
 <style lang="less">
-@import './style/weui.less';
-@import './style/base.less';
-@import './style/iconfont.less';
+  @import './style/weui.less';
+  @import './style/base.less';
+  @import './style/iconfont.less';
 </style>
 
 <script>
-import wepy from 'wepy'
-import 'wepy-async-function'
-
-import { setStore } from 'wepy-redux'
-import configStore from './store'
-
-const store = configStore()
-setStore(store)
-
-export default class extends wepy.app {
-  config = {
-    pages: [
-      'pages/authorize',
-      'pages/index',
-      'pages/info',
-      'pages/home',
-      'pages/search',
-      'pages/carline/carline_add',
-
-      'example/index',
-      'example/button',
-      'example/list',
-      'example/input',
-      'example/slider',
-      'example/uploader',
-
-      'example/article',
-      'example/badge',
-      'example/flex',
-      'example/footer',
-      'example/gallery',
-      'example/grid',
-      'example/icons',
-      'example/loadmore',
-      'example/panel',
-      'example/preview',
-      'example/progress',
-
-      'example/actionsheet',
-      'example/dialog',
-      'example/msg',
-      'example/msg_fail',
-      'example/msg_success',
-      'example/picker',
-      'example/toast',
-
-      'example/navbar',
-      'example/tabbar',
-
-      'example/searchbar'
-    ],
-
-    window: {
-      navigationBarTitleText: '乐途',
-      navigationBarTextStyle: 'black',
-      navigationBarBackgroundColor: '#FFFFFF',
-      enablePullDownRefresh: false,
-      backgroundColor: '#EFEFEF'
-    },
-    tabBar: {
-      color: '#8a8a8a',
-      selectedColor: '#e22727',
-      backgroundColor: '#FFFFFF',
-      list: [
-        {
-          pagePath: 'pages/index',
-          text: '首页',
-          iconPath: 'images/icon/home.png',
-          selectedIconPath: 'images/icon/home-selected.png'
+  import wepy from 'wepy'
+  import 'wepy-async-function'
+  import {
+    setStore
+  } from 'wepy-redux'
+  import configStore from './store'
+  import {
+    USER_INFO,
+    USER_SPECICAL_INFO,
+    TOKEN
+  } from '@/utils/constant'
+  import api from '@/api/api'
+  const store = configStore()
+  setStore(store)
+  export default class extends wepy.app {
+    config = {
+      pages: [
+        'pages/home',
+        'pages/authorize',
+        'pages/index',
+        'pages/info',
+        'pages/search',
+        'pages/route/route_release',
+        'pages/route/msg_success',
+        'example/index',
+        'example/button',
+        'example/list',
+        'example/input',
+        'example/slider',
+        'example/uploader',
+        'example/article',
+        'example/badge',
+        'example/flex',
+        'example/footer',
+        'example/gallery',
+        'example/grid',
+        'example/icons',
+        'example/loadmore',
+        'example/panel',
+        'example/preview',
+        'example/progress',
+        'example/actionsheet',
+        'example/dialog',
+        'example/msg',
+        'example/msg_fail',
+        'example/msg_success',
+        'example/picker',
+        'example/toast',
+        'example/navbar',
+        'example/tabbar',
+        'example/searchbar'
+      ],
+      window: {
+        navigationBarTitleText: '乐途',
+        navigationBarTextStyle: 'black',
+        navigationBarBackgroundColor: '#FFFFFF',
+        enablePullDownRefresh: false,
+        backgroundColor: '#EFEFEF'
+      },
+      tabBar: {
+        color: '#8a8a8a',
+        selectedColor: '#e22727',
+        backgroundColor: '#FFFFFF',
+        list: [{
+            pagePath: 'pages/index',
+            text: '首页',
+            iconPath: 'images/icon/home.png',
+            selectedIconPath: 'images/icon/home-selected.png'
+          },
+          {
+            pagePath: 'example/index',
+            text: 'WEUI',
+            iconPath: 'images/icon/release.png',
+            selectedIconPath: 'images/icon/release-selected.png'
+          },
+          {
+            pagePath: 'pages/home',
+            text: '首页',
+            iconPath: 'images/icon/send.png',
+            selectedIconPath: 'images/icon/send-s.png'
+          },
+          {
+            pagePath: 'pages/search',
+            text: '搜索',
+            iconPath: 'images/icon/search.png',
+            selectedIconPath: 'images/icon/search-s.png'
+          },
+          {
+            pagePath: 'pages/info',
+            text: '我',
+            iconPath: 'images/icon/mine.png',
+            selectedIconPath: 'images/icon/mine-s.png'
+          }
+        ]
+      },
+      networkTimeout: {
+        request: 10000,
+        downloadFile: 10000
+      },
+      debug: true
+    };
+    globalData = {
+      userInfo: null,
+      isFullScreen: false
+    };
+    constructor() {
+      super()
+      this.use('requestfix')
+      this.use('promisify')
+      // 拦截request请求
+      this.intercept('request', {
+        // 发出请求时的回调函数
+        config(p) {
+          // 对所有request请求中的OBJECT参数对象统一附加时间戳属性
+          p.timestamp = +new Date()
+          console.log('config request: ', p)
+          // 必须返回OBJECT参数对象，否则无法发送请求到服务端
+          return p
         },
-        {
-          pagePath: 'example/index',
-          text: 'WEUI',
-          iconPath: 'images/icon/release.png',
-          selectedIconPath: 'images/icon/release-selected.png'
+        // 请求成功后的回调函数
+        success(p) {
+          // 可以在这里对收到的响应数据对象进行加工处理
+          console.log('request success: ', p)
+          // 必须返回响应数据对象，否则后续无法对响应数据进行处理
+          return p
         },
-        {
-          pagePath: 'pages/home',
-          text: '首页',
-          iconPath: 'images/icon/send.png',
-          selectedIconPath: 'images/icon/send-s.png'
+        // 请求失败后的回调函数
+        fail(p) {
+          console.log('request fail: ', p)
+          // 必须返回响应数据对象，否则后续无法对响应数据进行处理
+          return p
         },
-        {
-          pagePath: 'pages/search',
-          text: '搜索',
-          iconPath: 'images/icon/search.png',
-          selectedIconPath: 'images/icon/search-s.png'
-        },
-        {
-          pagePath: 'pages/info',
-          text: '我',
-          iconPath: 'images/icon/mine.png',
-          selectedIconPath: 'images/icon/mine-s.png'
+        // 请求完成时的回调函数(请求成功或失败都会被执行)
+        complete(p) {
+          console.log('request complete: ', p)
         }
-      ]
-    },
-    networkTimeout: {
-      request: 10000,
-      downloadFile: 10000
-    },
-    debug: true
-  };
-
-  globalData = {
-    userInfo: null,
-    isFullScreen: false
-  };
-
-  constructor() {
-    super()
-    this.use('requestfix')
-    this.use('promisify')
-    // 拦截request请求
-    this.intercept('request', {
-      // 发出请求时的回调函数
-      config(p) {
-        // 对所有request请求中的OBJECT参数对象统一附加时间戳属性
-        p.timestamp = +new Date()
-        console.log('config request: ', p)
-        // 必须返回OBJECT参数对象，否则无法发送请求到服务端
-        return p
-      },
-
-      // 请求成功后的回调函数
-      success(p) {
-        // 可以在这里对收到的响应数据对象进行加工处理
-        console.log('request success: ', p)
-        // 必须返回响应数据对象，否则后续无法对响应数据进行处理
-        return p
-      },
-
-      // 请求失败后的回调函数
-      fail(p) {
-        console.log('request fail: ', p)
-        // 必须返回响应数据对象，否则后续无法对响应数据进行处理
-        return p
-      },
-
-      // 请求完成时的回调函数(请求成功或失败都会被执行)
-      complete(p) {
-        console.log('request complete: ', p)
+      })
+    }
+    onLaunch() {
+      this.testAsync()
+    }
+    onShow() {
+      this.checkFullScreen()
+      this.doLogin()
+    }
+    checkFullScreen() {
+      let systemInfo = wepy.getSystemInfoSync()
+      if (systemInfo.screenHeight - systemInfo.windowHeight - systemInfo.statusBarHeight - 32 > 72) {
+        //  全面屏
+        this.globalData.isFullScreen = true
       }
-    })
-  }
+    }
+    sleep(s) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve('promise resolved')
+        }, s * 1000)
+      })
+    }
+    async testAsync() {
+      const data = await this.sleep(3)
+      console.log(data)
+    }
 
-  onLaunch() {
-    this.testAsync()
-    this.checkFullScreen()
-  }
-
-  checkFullScreen() {
-    const that = this
-    let systemInfo = wepy.getSystemInfoSync()
-    if (systemInfo.screenHeight - systemInfo.windowHeight - systemInfo.statusBarHeight - 32 > 72) {
-      //  全面屏
-      that.isFullScreen = true
+    doLogin() {
+      wepy.getSetting().then(sres => {
+        if ((sres.authSetting)['scope.userInfo']) {
+          wepy.getUserInfo().then(ures => {
+            this.globalData.userInfo = ures.userInfo
+            wepy.setStorageSync(USER_INFO, ures.userInfo)
+            wepy.login().then(lres => {
+              api.wxLogin({
+                method: 'POST',
+                query: {
+                  code: lres.code,
+                  encryptedData: ures.encryptedData,
+                  iv: ures.iv
+                },
+                success: res => {
+                  let data = res.data
+                  wepy.setStorageSync(TOKEN, data.token)
+                  if (data.openid) {
+                    wepy.setStorageSync(USER_SPECICAL_INFO, data.openId)
+                  }
+                }
+              })
+            })
+          })
+        } else {
+          wepy.navigateTo({
+            url: '/pages/authorize'
+          })
+        }
+      })
     }
   }
-
-  sleep(s) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve('promise resolved')
-      }, s * 1000)
-    })
-  }
-
-  async testAsync() {
-    const data = await this.sleep(3)
-    console.log(data)
-  }
-
-  getUserInfo(cb) {
-    const that = this
-    if (this.globalData.userInfo) {
-      return this.globalData.userInfo
-    }
-    wepy.getUserInfo({
-      success(res) {
-        that.globalData.userInfo = res.userInfo
-        cb && cb(res.userInfo)
-      }
-    })
-  }
-}
 </script>

@@ -30,7 +30,7 @@
           </view>
         </view>
         <!-- 提交车牌 -->
-        <button class="carNumberBtn" @tap='submitNumber' style="background: #333333;color:#fff;" type="default">确定</button>
+        <button class="carNumberBtn" @tap='submitNumber' style="background: #e22727;color:#fff;" type="default">{{btnText}}</button>
 
         <!-- 虚拟键盘 -->
         <view class="keyboard" hidden='{{!KeyboardState}}'>
@@ -90,7 +90,8 @@
       ],
       carnum: [],
       showNewPower: false,
-      KeyboardState: true
+      KeyboardState: true,
+      btnText: '返回'
     };
 
     components = {};
@@ -106,6 +107,7 @@
           } else {
             this.carnum = this.carnum.concat(arr)
           }
+          this.btnText = this.carnum[6]?'确定':'返回'
         }
       },
       bindDelChoose() {
@@ -113,6 +115,7 @@
           this.carnum.splice(this.carnum.length - 1, 1);
           this.carnum = this.carnum;
         }
+        this.btnText = this.carnum[6]?'确定':'返回'
       },
       showPowerBtn() {
         this.showNewPower = true;

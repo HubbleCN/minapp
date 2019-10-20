@@ -15,7 +15,7 @@
 
     <view class="main-menus">
       <view class="az-grids">
-        <navigator class="az-grid col" url="/pages/carline/carline_add" hover-class="az-grid_active">
+        <navigator class="az-grid col" url="/pages/route/route_release" hover-class="az-grid_active">
           <view class="az-row">
             <i class="iconfont icon-car"></i>
             <view class="az-col main-menu-text">
