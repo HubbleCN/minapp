@@ -2,17 +2,14 @@
 <template>
   <view class='container'>
     <view class="sliders-zone">
-      <swiper class="sliders" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}"
-        interval="{{interval}}" duration="{{duration}}" circular
-        indicator-color="rgba(255, 255, 255, .3)" indicator-active-color="#FFFFFF">
-            <block wx:for="{{imgUrls}}" wx:key="*this">
-                <swiper-item>
-                    <image src="{{item}}" class="slide-image"></image>
-                </swiper-item>
-            </block>
-        </swiper>
+      <swiper class="sliders" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular indicator-color="rgba(255, 255, 255, .3)" indicator-active-color="#FFFFFF">
+        <block wx:for="{{imgUrls}}" wx:key="*this">
+          <swiper-item>
+            <image src="{{item}}" class="slide-image"></image>
+          </swiper-item>
+        </block>
+      </swiper>
     </view>
-
     <view class="main-menus">
       <view class="az-grids">
         <navigator class="az-grid col" url="/pages/route/route_release" hover-class="az-grid_active">
@@ -25,18 +22,43 @@
           </view>
         </navigator>
       </view>
-
     </view>
+    <view class="pc-routes" wx:if="{{!is_empty}}">
+      <view class="pc-route-item" wx:for="{{pageData.list}}" wx:key="id">
+        <view class="pc-route-body">
 
+          <view class="az-row">
+            <view><i class="iconfont icon-dian origin"></i>{{item.fromLocationName}}</view>
+          </view>
+          <view class="az-row">
+            <view><i class="iconfont icon-dian destination"></i>{{item.toLocationName}}</view>
+          </view>
+          <view class="az-row">
+            <view><i class="iconfont icon-ico_time time"></i><text class="label-value">{{item.ddatetime}}</text></view>
+          </view>
+        </view>
+        <view class="pc-route-footer">
+          <view><text class="label">空座数：</text><text class="label-value">{{item.count}}</text></view>
+          <view><text class="label">单程价：</text><text class="label-value">{{item.price}}</text></view>
+        </view>
+      </view>
+    </view>
+    <placeholder :show.sync="is_empty" message="暂无数据"></placeholder>
+    <loading :loading.sync="loading" message=""></loading>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import api from '@/api/api'
+  import moment from 'moment'
+  import Placeholder from '@/components/common/placeholder'
+  import Loading from '@/components/common/loading'
   export default class Home extends wepy.page {
     config = {
+      enablePullDownRefresh: true,
+      onReachBottomDistance: 50
     }
-
     data = {
       imgUrls: [
         'https://images.unsplash.com/photo-1551334787-21e6bd3ab135?w=640',
@@ -46,82 +68,116 @@
       indicatorDots: false,
       autoplay: true,
       interval: 4000,
-      duration: 1000
+      duration: 1000,
+      is_empty: false,
+      pageData: {
+        pageNum: 1,
+        pageSize: 5,
+        noMore: false,
+        list: []
+      },
+      loading: false
     };
-
     components = {
-
+      placeholder: Placeholder,
+      loading: Loading
     };
-
     methods = {};
-
     events = {};
-
     watch = {};
-
     computed = {};
-
-    onLoad() { };
-
-    onShow() { };
+    loadData() {
+      api.getRouteRecommendation({
+        method: 'POST',
+        query: {
+          pageNum: this.pageData.pageNum,
+          pageSize: this.pageData.pageSize
+        },
+        success: res => {
+          this.loading = false
+          if (res.total === 0) {
+            this.is_empty = true
+          } else {
+            res.data.forEach(val => {
+              val.dtime = moment(val.departureTime).format('HH:mm')
+              val.ddate = moment(val.departureTime).format('YYYY-MM-DD')
+              val.ddatetime = moment(val.departureTime).format('YYYY年MM月DD日 HH:mm')
+            })
+            this.pageData.list = this.pageData.list.concat(res.data)
+            if (this.pageData.list.length === res.total) {
+              this.pageData.noMore = true
+            }
+            if (this.pageData.pageNum < res.totalPage) {
+              this.pageData.pageNum = this.pageData.pageNum + 1
+            }
+          }
+          this.$apply()
+        }
+      })
+    }
+    onLoad() {};
+    onShow() {};
+    onReady() {
+      this.loadData()
+    };
+    onPullDownRefresh() {
+      console.log('下拉刷新列表')
+      setTimeout(function() {
+        // 不加这个方法真机下拉会一直处于刷新状态，无法复位
+        wepy.stopPullDownRefresh()
+      }, 5000)
+    }
+    onReachBottom() {
+      if (!this.pageData.noMore) {
+        this.loading = true
+        this.loadData()
+      }
+    }
   }
 </script>
 
 <style lang='less'>
-
-.sliders-zone {
-  position: relative;
-  width: 100%;
-  border-radius: 0 0 5% 5%;
-  overflow: hidden;
-
- .sliders {
+  .sliders-zone {
+    position: relative;
     width: 100%;
-    height: 400rpx;
+    border-radius: 0 0 5% 5%;
+    overflow: hidden;
+    .sliders {
+      width: 100%;
+      height: 400rpx;
+    }
+    .slide-image {
+      width: 100%; //height: 500rpx;
+    }
   }
-
-  .slide-image {
-    width: 100%;
-    //height: 500rpx;
+  .main-menus {
+    width: 710rpx;
+    margin: -60rpx auto 0 auto;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    .az-grid {
+      background: rgba(255, 255, 255, .9);
+      padding: 40rpx;
+    }
+    .az-grid_active {
+      background-color: rgba(236, 236, 236, .9);
+    }
+    .iconfont {
+      font-size: 64rpx;
+      color: #e22727;
+      align-items: center;
+    }
+    .main-menu-text {
+      flex: 1;
+      margin-left: 30rpx;
+    }
+    .text {
+      font-weight: 400;
+    }
+    .tip {
+      font-size: 28rpx;
+      color: #8a8a8a;
+    }
   }
-}
-
-.main-menus {
-  width: 710rpx;
-  margin: -60rpx auto 0 auto;
-  border-radius: 3px;
-  overflow: hidden;
-  position: relative;
-
-  .az-grid {
-    background: rgba(255,255,255,.9);
-    padding: 40rpx;
-  }
-
-  .az-grid_active {
-    background-color: rgba(236,236,236,.9);
-  }
-
-  .iconfont {
-    font-size: 64rpx;
-    color: #e22727;
-    align-items: center;
-  }
-
-  .main-menu-text {
-    flex: 1;
-    margin-left: 30rpx;
-  }
-
-  .text {
-    font-weight: 400;
-  }
-
-  .tip {
-    font-size: 28rpx;
-    color: #8a8a8a;
-  }
-}
-
-
 </style>

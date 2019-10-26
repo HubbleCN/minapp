@@ -17,7 +17,10 @@
     TOKEN
   } from '@/utils/constant'
   import api from '@/api/api'
+  import moment from 'moment'
+  import 'moment/locale/zh-cn'
   const store = configStore()
+  moment.locale('zh-cn')
   setStore(store)
   export default class extends wepy.app {
     config = {
@@ -108,7 +111,9 @@
     };
     globalData = {
       userInfo: null,
-      isFullScreen: false
+      isFullScreen: false,
+      postLogin: false,
+      wattingRequest: []
     };
     constructor() {
       super()
@@ -148,7 +153,7 @@
     }
     onShow() {
       this.checkFullScreen()
-      this.doLogin()
+      // this.doLogin()
     }
     checkFullScreen() {
       let systemInfo = wepy.getSystemInfoSync()
@@ -168,37 +173,48 @@
       const data = await this.sleep(3)
       console.log(data)
     }
-
     doLogin() {
-      wepy.getSetting().then(sres => {
-        if ((sres.authSetting)['scope.userInfo']) {
-          wepy.getUserInfo().then(ures => {
-            this.globalData.userInfo = ures.userInfo
-            wepy.setStorageSync(USER_INFO, ures.userInfo)
-            wepy.login().then(lres => {
-              api.wxLogin({
-                method: 'POST',
-                query: {
-                  code: lres.code,
-                  encryptedData: ures.encryptedData,
-                  iv: ures.iv
-                },
-                success: res => {
-                  let data = res.data
-                  wepy.setStorageSync(TOKEN, data.token)
-                  if (data.openid) {
-                    wepy.setStorageSync(USER_SPECICAL_INFO, data.openId)
-                  }
-                }
+      // 防止同时发送多个login请求
+      if (this.globalData.postLogin === false) {
+        this.globalData.postLogin = true
+        wepy.getSetting().then(sres => {
+          if ((sres.authSetting)['scope.userInfo']) {
+            wepy.getUserInfo().then(ures => {
+              this.globalData.userInfo = ures.userInfo
+              wepy.setStorageSync(USER_INFO, ures.userInfo)
+              wepy.login().then(lres => {
+                api.wxLogin({
+                  method: 'POST',
+                  query: {
+                    code: lres.code,
+                    encryptedData: ures.encryptedData,
+                    iv: ures.iv
+                  },
+                  success: res => {
+                    let data = res.data
+                    wepy.setStorageSync(TOKEN, data.token)
+                    if (data.openid) {
+                      wepy.setStorageSync(USER_SPECICAL_INFO, data.openId)
+                    }
+
+                    // 登录成功以后将标志还原，并执行wattingRequest中的请求
+                    this.globalData.postLogin = false
+                    this.globalData.wattingRequest.forEach(element => {
+                      element()
+                    })
+                    this.globalData.wattingRequest = []
+                  },
+                  fail: () => { this.globalData.postLogin = false }
+                })
               })
             })
-          })
-        } else {
-          wepy.navigateTo({
-            url: '/pages/authorize'
-          })
-        }
-      })
+          } else {
+            wepy.navigateTo({
+              url: '/pages/authorize'
+            })
+          }
+        })
+      }
     }
   }
 </script>

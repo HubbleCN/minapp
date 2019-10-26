@@ -3,16 +3,15 @@
     <view class="header">
       <view class="overlay-border">
         <view class="overlay-bg">
-          <image src="{{avatarUrl}}"/>
+          <image src="{{avatarUrl}}" />
         </view>
       </view>
       <view class="z-user-info az-col">
         <view class="z-user-info-1 az-row">
-          <image class="z-user-avatar" src="{{avatarUrl}}"/>
+          <image class="z-user-avatar" src="{{avatarUrl}}" />
           <view class="z-user-id">188****1234</view>
           <view class="z-sign-btn">签到</view>
         </view>
-
         <view class="az-row">
           <view class="z-ui-item az-col">
             <view>5</view>
@@ -29,7 +28,6 @@
         </view>
       </view>
     </view>
-
     <view class="az_block">
       <navigator class="item" url="/pages/register" wx:if="{{bShowBind}}" hover-class="weui-cell_active">
         <view>
@@ -40,7 +38,6 @@
         </view>
         <view class="arrow"></view>
       </navigator>
-
       <navigator class="item" url="/pages/order" hover-class="weui-cell_active">
         <view class="item_content">
           <i class="iconfont icon-icon_shakehands"></i>
@@ -56,176 +53,176 @@
         <view class="arrow"></view>
       </navigator>
     </view>
-
     <view class="az_block">
-      <navigator class="item" url="/pages/collection?type=0" hover-class="weui-cell_active">
+      <navigator class="item" bindtap="openSetting" hover-class="weui-cell_active">
         <view class="item_content">
           <i class="iconfont icon-icon_shezhi"></i>
-          <view class="text">我的足迹</view>
+          <view class="text">权限设置</view>
         </view>
         <view class="arrow"></view>
       </navigator>
     </view>
   </view>
 </template>
-<script>
-import wepy from 'wepy'
-import api from '@/api/api'
-import tip from '@/utils/tip'
-import { USER_INFO, USER_SPECICAL_INFO, SUCCESS_CODE } from '@/utils/constant'
-export default class Index extends wepy.page {
-  config = {
-    navigationBarTitleText: '我',
-    //navigationBarBackgroundColor: '#1890ff',
-    navigationBarTextStyle: 'white'
-  }
-  components = {}
 
-  data = {
-    avatarUrl: '',
-    nickName: '',
-    bShowBind: false
+<script>
+  import wepy from 'wepy'
+  import api from '@/api/api'
+  import {
+    USER_INFO,
+    USER_SPECICAL_INFO
+  } from '@/utils/constant'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '我',
+      // navigationBarBackgroundColor: '#1890ff',
+      navigationBarTextStyle: 'white'
+    }
+    components = {}
+    data = {
+      avatarUrl: '',
+      nickName: '',
+      bShowBind: false
+    }
+    getUserInfo(phon, code) {
+      let that = this
+      let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {}
+      let openId = userSpecialInfo.openId
+      api.getUserInfo({
+        method: 'POST',
+        query: {
+          openId: openId
+        },
+        success: function(res) {
+          if (res.data.userId) {
+            that.bShowBind = false
+          } else {
+            that.bShowBind = true
+          }
+        }
+      })
+    }
+    onLoad() {
+      let that = this
+      let userInfo = wepy.getStorageSync(USER_INFO)
+      that.avatarUrl = userInfo.avatarUrl
+      that.nickName = userInfo.nickName
+    }
+    onShow() {
+      this.getUserInfo()
+    }
+    computed = {}
+    methods = {
+      openSetting() {
+        wepy.openSetting({})
+      }
+    }
+    events = {}
   }
-  getUserInfo (phon, code) {
-    let that = this
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {}
-    let openId = userSpecialInfo.openId
-    api.getUserInfo({
-      method: 'POST',
-      query: {
-        openId: openId
-      },
-      success: function(res){
-        if (res.data.userId) {
-          that.bShowBind = false
-        } else {
-          that.bShowBind = true
+</script>
+
+<style lang="less">
+  .header {
+    height: 390rpx;
+    position: relative;
+    .overlay-border {
+      overflow: hidden;
+      border-radius: 0 0 20% 20%;
+      .overlay-bg {
+        height: 320rpx;
+        border-radius: 0 0 20% 20%;
+        border: 2rpx solid #000;
+        overflow: hidden;
+        filter: blur(16rpx);
+        image {
+          width: 100%;
+          height: 100%;
         }
       }
-    })
-  }
-
-  onLoad () {
-    let that = this
-    let userInfo = wepy.getStorageSync(USER_INFO)
-    that.avatarUrl = userInfo.avatarUrl
-    that.nickName = userInfo.nickName
-  }
-  onShow () {
-    this.getUserInfo()
-  }
-  computed = {}
-  methods = {}
-  events = {}
-}
-</script>
-<style lang="less">
-.header {
-  height: 390rpx;
-  position: relative;
-  .overlay-border {
-    overflow: hidden;
-    border-radius: 0 0 20% 20%;
-    .overlay-bg {
-      height: 320rpx;
-      border-radius: 0 0 20% 20%;
-      border: 2rpx solid #000;
+    }
+    .z-user-info {
+      height: 280rpx;
+      width: 650rpx;
+      position: absolute;
+      top: -280rpx;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16rpx;
+      padding: 30rpx;
+      box-shadow: -4rpx 4rpx 20rpx 0 rgba(0, 0, 0, 0.1);
+      text-align: center;
+      position: relative;
       overflow: hidden;
-      filter: blur(16rpx);
-
-      image {
-        width: 100%;
-        height: 100%;
+    }
+    .z-user-info-1 {
+      flex: 1;
+      align-items: center;
+    }
+    .z-ui-item {
+      flex: 1;
+      padding: 0 10rpx;
+      font-size: 32rpx;
+      line-height: 1.8;
+    }
+    .z-user-avatar {
+      height: 120rpx;
+      width: 120rpx;
+      border-radius: 50%;
+    }
+    .z-user-id {
+      flex: 1;
+      font-size: 36rpx;
+      font-weight: bold;
+      text-align: left;
+      margin: 0 20rpx;
+    }
+    .z-sign-btn {
+      color: white;
+      background: #e22727;
+      width: 180rpx;
+      height: 60rpx;
+      line-height: 60rpx;
+      font-size: 32rpx;
+      font-weight: bold;
+      border-radius: 30rpx 0 0 30rpx;
+      position: absolute;
+      right: 0;
+    }
+  }
+  .info_block {
+    margin-top: 10rpx;
+    .item {
+      border-top: 1rpx solid #dbdbdb;
+      background: #fff;
+      padding: 34rpx 28rpx;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .item:last-child {
+      border-bottom: 1rpx solid #dbdbdb;
+    }
+    .item_content {
+      display: flex;
+      align-items: center;
+      .text {
+        margin-left: 20rpx;
+        color: #1a1a1a;
       }
     }
-  }
-
-  .z-user-info {
-    height: 280rpx;
-    width: 650rpx;
-    position: absolute;
-    top: -280rpx;
-    margin: 0 auto;
-    background: white;
-    border-radius: 16rpx;
-    padding: 30rpx;
-    box-shadow: -4rpx 4rpx 20rpx 0 rgba(0, 0, 0, 0.1);
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .z-user-info-1 {
-    flex: 1;
-    align-items: center;
-  }
-  .z-ui-item {
-    flex: 1;
-    padding: 0 10rpx;
-    font-size: 32rpx;
-    line-height: 1.8;
-  }
-  .z-user-avatar {
-    height: 120rpx;
-    width: 120rpx;
-    border-radius: 50%;
-  }
-
-  .z-user-id {
-    flex: 1;
-    font-size: 36rpx;
-    font-weight: bold;
-    text-align: left;
-    margin: 0 20rpx;
-  }
-
-  .z-sign-btn {
-    color: white;
-    background: #e22727;
-    width: 180rpx;
-    height: 60rpx;
-    line-height: 60rpx;
-    font-size: 32rpx;
-    font-weight: bold;
-    border-radius: 30rpx 0 0 30rpx;
-    position: absolute;
-    right: 0;
-  }
-}
-
-.info_block {
-  margin-top: 10rpx;
-  .item {
-    border-top: 1rpx solid #dbdbdb;
-    background: #fff;
-    padding: 34rpx 28rpx;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .item:last-child {
-    border-bottom: 1rpx solid #dbdbdb;
-  }
-  .item_content {
-    display: flex;
-    align-items: center;
-    .text {
-      margin-left: 20rpx;
-      color: #1a1a1a;
+    .item_img {
+      width: 42rpx;
+      height: 42rpx;
+    }
+    .arrow {
+      color: #cccccc;
+      font-size: 32rpx;
+    }
+    .tip {
+      color: #999;
+      font-size: 24rpx;
+      margin-top: 20rpx;
+      margin-left: 60rpx;
     }
   }
-  .item_img {
-    width: 42rpx;
-    height: 42rpx;
-  }
-  .arrow {
-    color: #cccccc;
-    font-size: 32rpx;
-  }
-  .tip {
-    color: #999;
-    font-size: 24rpx;
-    margin-top: 20rpx;
-    margin-left: 60rpx;
-  }
-}
 </style>

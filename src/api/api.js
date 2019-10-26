@@ -14,6 +14,8 @@ const wxLogin = (params) => wxRequest(params, `/user/login`)
 const getUserInfo = (params) => wxRequest(params, `/user/getUserInfo`)
 // 发布线路信息
 const releaseRoute = (params) => wxRequest(params, `/route/release`)
+// 首页获取推荐路线
+const getRouteRecommendation = (params) => wxRequest(params, `/route/home/recommendation`)
 
 /**
  * 获取发现好商品接口
@@ -154,6 +156,7 @@ export default {
   serverUrl,
   wxLogin,
   releaseRoute,
+  getRouteRecommendation,
   hostGoodsList,
   getDiscoverList,
   getHomeDisvocerList,

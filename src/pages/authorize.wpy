@@ -56,7 +56,8 @@
               if (rd.openId) {
                 wepy.setStorageSync(USER_SPECICAL_INFO, rd)
               }
-              wepy.switchTab({
+              // 授权登录以后重启下小程序，以后就不需要再到授权页面了，直接发送登录接口即可
+              wepy.reLaunch({
                 url: '/pages/home'
               })
             }

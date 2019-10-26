@@ -1,0 +1,45 @@
+<template>
+  <view class="loadMoreGif" wx:if="{{loading}}">
+    <image src="../../images/loading.gif" />
+    <text>{{message}}</text>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  // 上推加载更多数据
+  export default class Loading extends wepy.component {
+    props = {
+      // 父页面传入，请求参数
+      loading: {
+        type: Boolean,
+        default: false,
+        twoWay: true
+      },
+      message: {
+        default: '加载中...'
+      }
+    };
+    data = {
+    }
+  }
+</script>
+
+<style lang="less">
+  .loadMoreGif {
+    margin: 20rpx auto;
+    width: 220rpx;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text {
+      font-size: 30rpx;
+      color: #999;
+      margin-left: 10rpx;
+    }
+    image {
+      width: 30rpx;
+      height: 30rpx;
+    }
+  }
+</style>
