@@ -1,0 +1,97 @@
+<!--  -->
+<template>
+  <azSteps :steps.sync="steps" step="2">
+  </azSteps>
+  <view class="container">
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">车牌</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input class="weui-input" bindinput="bindPhoneInput" placeholder="请输入车牌" value="{{phone}}" />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">品牌</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input class="weui-input" bindinput="bindPhoneInput" placeholder="请输入品牌" value="{{phone}}" />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">颜色</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input class="weui-input" bindinput="bindPhoneInput" placeholder="请输入颜色" value="{{phone}}" />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">类型</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input class="weui-input" bindinput="bindPhoneInput" placeholder="请输入类型" value="{{phone}}" />
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import util from '@/utils/util'
+  import moment from 'moment'
+  import api from '@/api/api'
+  import AzSteps from '@/components/common/az_steps'
+  export default class SupplementaryInfoStep2 extends wepy.page {
+    config = {
+      // navigationBarTitleText: ''
+    };
+    props = {
+      id: {
+        type: Number
+      }
+    };
+    data = {
+      steps: [{
+          title: '身份信息',
+          desc: '第一步'
+        },
+        {
+          title: '车辆信息',
+          desc: '第二步'
+        },
+        {
+          title: '完成',
+          desc: '第三步'
+        }
+      ],
+      options: {},
+      points: [],
+      verifyCode: '',
+      isFullSucreen: false
+    };
+    components = {
+      azSteps: AzSteps
+    };
+    methods = {};
+    events = {};
+    watch = {};
+    computed = {};
+    onLoad(options) {
+      this.options = options
+    }
+    onShow() {};
+  }
+</script>
+
+<style lang='less'>
+  @import '../../style/base.less';
+  .weui-cells {
+    width: 750rpx;
+    margin-top: 20rpx;
+  }
+</style>

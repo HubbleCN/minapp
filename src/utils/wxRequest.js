@@ -1,7 +1,6 @@
 import wepy from 'wepy'
-import util from './util'
-import md5 from './md5'
 import api from '@/api/api'
+import tip from '@/utils/tip'
 // 因为在App onload中要使用api会导致wepy.getAccountInfoSync()报错，所以这里只能直接把appId配置好
 
 // const API_SECRET_KEY = 'www.mall.cycle.com'
@@ -13,16 +12,18 @@ const wxRequest = async (params = {}, url) => {
 
   const baseUrl = `${api.serverUrl}/wx/${appId}`
 
-  url = `${baseUrl}${url}`
+  url = params.url ? `${baseUrl}${params.url}` : `${baseUrl}${url}`
 
-  // tip.loading()
   let data = params.query || {}
   let success = params.success
   let fail = params.fail
+  let final = params.final
   // data.sign = SIGN
   // data.time = TIMESTAMP
-
   let request = function () {
+    if (params.showLoading) {
+      tip.loading()
+    }
     return new Promise((resolve, reject) => {
       wepy.request({
           url: url,
@@ -35,6 +36,19 @@ const wxRequest = async (params = {}, url) => {
         })
         .then(
           result => {
+            if (params.showLoading) {
+              tip.loaded()
+            }
+
+            if (result.statusCode !== 200) {
+              wepy.showToast({
+                title: `服务异常, ${result.statusCode}`,
+                icon: 'none',
+                duration: 2000
+              })
+              reject(result)
+              return
+            }
             // 成功回调
             if (
               result.data.msg === 'ok' &&
@@ -61,14 +75,23 @@ const wxRequest = async (params = {}, url) => {
                 fail(result.data)
               }
             }
+            if (final && typeof final === 'function') {
+              final(result.data)
+            }
             resolve(result)
           },
           (error) => {
+            if (params.showLoading) {
+              tip.loaded()
+            }
             wepy.showToast({
               title: '服务异常, 请联系管理员',
               icon: 'none',
               duration: 2000
             })
+            if (final && typeof final === 'function') {
+              final(error)
+            }
             reject(error)
           }
         )

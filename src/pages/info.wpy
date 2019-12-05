@@ -14,12 +14,12 @@
         </view>
         <view class="az-row">
           <view class="z-ui-item az-col">
-            <view>5</view>
-            <view>我寄的</view>
+            <view>{{release}}</view>
+            <view>发布的</view>
           </view>
           <view class="z-ui-item az-col">
             <view>8</view>
-            <view>我收的</view>
+            <view>参与的</view>
           </view>
           <view class="z-ui-item az-col">
             <view>188</view>
@@ -38,10 +38,10 @@
         </view>
         <view class="arrow"></view>
       </navigator>
-      <navigator class="item" url="/pages/order" hover-class="weui-cell_active">
+      <navigator class="item" url="/pages/account/supplementary_info_step1" hover-class="weui-cell_active">
         <view class="item_content">
           <i class="iconfont icon-icon_shakehands"></i>
-          <view class="text">全部订单</view>
+          <view class="text">账号信息</view>
         </view>
         <view class="arrow"></view>
       </navigator>
@@ -74,18 +74,18 @@
   } from '@/utils/constant'
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '我',
+      // navigationBarTitleText: '我',
       // navigationBarBackgroundColor: '#1890ff',
-      navigationBarTextStyle: 'white'
+      // navigationBarTextStyle: 'white'
     }
     components = {}
     data = {
       avatarUrl: '',
       nickName: '',
-      bShowBind: false
+      bShowBind: false,
+      release: 0,
     }
     getUserInfo(phon, code) {
-      let that = this
       let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {}
       let openId = userSpecialInfo.openId
       api.getUserInfo({
@@ -95,21 +95,27 @@
         },
         success: function(res) {
           if (res.data.userId) {
-            that.bShowBind = false
+            this.bShowBind = false
           } else {
-            that.bShowBind = true
+            this.bShowBind = true
           }
         }
       })
     }
     onLoad() {
-      let that = this
       let userInfo = wepy.getStorageSync(USER_INFO)
-      that.avatarUrl = userInfo.avatarUrl
-      that.nickName = userInfo.nickName
+      this.avatarUrl = userInfo.avatarUrl
+      this.nickName = userInfo.nickName
     }
     onShow() {
-      this.getUserInfo()
+      let self = this
+      api.getAccountOverview({
+        method: 'POST',
+        success: res => {
+          const data = res.data
+          self.release = data.release
+        }
+      })
     }
     computed = {}
     methods = {
@@ -161,7 +167,7 @@
     .z-ui-item {
       flex: 1;
       padding: 0 10rpx;
-      font-size: 32rpx;
+      font-size: 26rpx;
       line-height: 1.8;
     }
     .z-user-avatar {

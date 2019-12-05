@@ -1,0 +1,179 @@
+<!--  -->
+<template>
+  <view class="az-steps-bg">
+    <view class="az-steps">
+      <block wx:for="{{steps}}" wx:key="*this">
+        <view class="az-step-item {{index < step? 'az-step-item-process' : ''}} ">
+          <view class="az-step-item-icon">
+            <view>{{index + 1}}</view>
+          </view>
+          <view class="az-step-item-content">
+            <view class="az-step-item-title">{{item.title}}</view>
+            <view class="az-step-item-description">{{item.desc}}</view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import api from '@/api/api'
+  export default class AzSteps extends wepy.component {
+    props = {
+      // 父页面传入，请求参数
+      steps: {
+        type: Array,
+        default: []
+      },
+      step: {
+        default: 1
+      }
+    };
+    components = {};
+    methods = {
+    };
+    events = {};
+    watch = {};
+    computed = {};
+    /**
+     * 生命周期函数--监听页面加载
+     */
+    onLoad(options) {};
+    /**
+     * 生命周期函数--监听页面初次渲染完成
+     */
+    onReady() {
+    };
+    /**
+     * 生命周期函数--监听页面显示
+     */
+    onShow() {
+    };
+    /**
+     * 生命周期函数--监听页面隐藏
+     */
+    onHide() {
+    };
+    /**
+     * 生命周期函数--监听页面卸载
+     */
+    onUnload() {
+    };
+    /**
+     * 页面相关事件处理函数--监听用户下拉动作
+     */
+    onPullDownRefresh() {
+    };
+    /**
+     * 页面上拉触底事件的处理函数
+     */
+    onReachBottom() {
+    };
+    /**
+     * 用户点击右上角分享
+     */
+    onShareAppMessage() {
+    }
+  }
+</script>
+
+<style lang='less'>
+  @import '../../style/base.less';
+  .az-steps-bg {
+    background: #fff;
+    width: 710rpx;
+    padding: 32rpx 20rpx;
+    position: fixed;
+    z-index: 10;
+  }
+  .az-steps-bg + .container {
+    padding-top: 148rpx;
+  }
+
+  .az-steps {
+    .display-flex();
+    .justify-content(space-between);
+    .az-step-item {
+      .display-flex();
+      .justify-content(space-between);
+      &:not(:first-child) {
+        margin-left: 64rpx;
+        .az-step-item-icon {
+          &:before {
+            width: 64rpx;
+          }
+        }
+        .az-step-item-content {
+          .az-step-item-title {}
+        }
+      }
+      &:not(:first-child) {
+        margin-left: 60rpx;
+      }
+      &.az-step-item-process {
+        .az-step-item-icon {
+          border-color: @azuiPrimaryColor;
+          background: @azuiPrimaryColor;
+          color: #fff;
+          &:before {
+            background: rgba(226, 39, 39, .25);
+          }
+        }
+        .az-step-item-content {
+          .az-step-item-title {
+            color: rgba(0, 0, 0, .85);
+          }
+          .az-step-item-description {
+            color: rgba(0, 0, 0, .65);
+          }
+        }
+      }
+      .az-step-item-icon {
+        width: 48rpx;
+        height: 48rpx;
+        margin: 0 16rpx;
+        font-size: 24rpx;
+        color: rgba(0, 0, 0, .25);
+        background-color: #fff;
+        border-color: rgba(0, 0, 0, .25);
+        line-height: 48rpx;
+        text-align: center;
+        border: 2rpx solid rgba(0, 0, 0, .25);
+        border-radius: 50%;
+        transition: background-color .3s, border-color .3s;
+        position: relative;
+        &:before {
+          position: absolute;
+          top: 24rpx;
+          right: 68rpx;
+          display: block;
+          width: 0;
+          height: 2rpx;
+          background: #e8e8e8;
+          content: '';
+        }
+      }
+      .az-step-item-content {
+        .display-flex();
+        .flex-direction(column);
+        .justify-content(space-between);
+        .az-step-item-title {
+          color: rgba(0, 0, 0, .45);
+          position: relative;
+          display: inline-block;
+          padding-right: 20rpx;
+          font-size: 28rpx;
+          line-height: 52rpx;
+        }
+        .az-step-item-description {
+          color: rgba(0, 0, 0, .45);
+          max-width: 140px;
+          white-space: normal;
+          font-size: 20rpx;
+        }
+      }
+    }
+  }
+</style>

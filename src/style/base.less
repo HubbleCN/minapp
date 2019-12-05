@@ -1,6 +1,7 @@
 @import './base/fn.less';
 
 @azuiPrimaryColor: #e22727;
+@weuiBtnDefaultGap: 30rpx;
 
 .container {
   height: 100%;
@@ -197,12 +198,26 @@ page {
   display: flex;
   background: white;
 
+  .weui-agree {
+    padding: 0;
+  }
+
   .col {
     flex: 1;
     .display-flex();
     .align-items(center);
     padding: 0 20rpx
   }
+
+  .confirm-btn {
+    background: @azuiPrimaryColor;
+    color: white;
+    max-width: 240rpx;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+
 }
 
 .fix-full-screen {
@@ -230,9 +245,15 @@ page {
   position: relative;
   background-color: #ffffff;
   margin-bottom: 20rpx;
-
   font-size: 28rpx;
   color: #1a1a1a;
+
+  .user-avatar {
+    height: 60rpx;
+    width: 60rpx;
+    border-radius: 50%;
+    margin-right: 20rpx;
+  }
 
   .pc-route-body {
     position: relative;
@@ -245,6 +266,24 @@ page {
   .pc-route-footer {
     position: relative;
     padding: 20rpx 0 0 0;
+  }
+
+  .locations {
+    flex: 1;
+  }
+
+  .datetime {
+    flex: 1;
+  }
+
+  .seat {
+    .iconfont {
+      font-size: 28rpx;
+    }
+
+    .seat-used {
+      color: @azuiPrimaryColor;
+    }
   }
 
   .iconfont {
@@ -261,10 +300,22 @@ page {
     color: #ea9518;
   }
   .label {
-    font-size: 24rpx;
+    font-size: 22rpx;
   }
   .label-value {
-    font-size: 24rpx;
+    font-size: 22rpx;
     color: #8a8a8a;
   }
+  .location-name {
+    width: 100%
+  }
+}
+
+
+.weui-btn {
+  width: 600rpx;
+}
+
+button[type=primary].weui-btn {
+  background-color: @azuiPrimaryColor
 }

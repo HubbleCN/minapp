@@ -1,7 +1,6 @@
 <template>
-    <view class="empty-placeholder row-center" wx:if="{{show}}">
-        <image class="icon-xl" src="../../images/empty.png" />
-        <view class="txt">{{message}}</view>
+    <view class="weui-loadmore weui-loadmore_line" wx:if="{{show}}">
+        <view class="weui-loadmore__tips weui-loadmore__tips_in-line" >{{message}}</view>
     </view>
 </template>
 <script>
@@ -13,33 +12,11 @@ export default class Placeholder extends wepy.component {
       default: false
     },
     message: {
-      default: '没有相关信息'
+      default: '暂无数据'
     }
   };
 }
 </script>
 <style lang="less">
-.empty-placeholder {
-  margin-top: 150rpx;
-  width: 100%;
-  text-align: center;
-  text {
-    color: #666;
-    font-size: 40rpx;
-    margin-left: 30rpx;
-  }
-}
 
-.icon-xl {
-  width: 140rpx;
-  height: 148rpx;
-  display: block;
-  margin: 0 auto;
-}
-
-.txt {
-  font-size: 26rpx;
-  color: #888888;
-  margin-top: 36rpx;
-}
 </style>
