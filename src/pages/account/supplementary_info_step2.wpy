@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <azSteps :steps.sync="steps" step="2">
+  <azSteps wx:if="steps" :steps.sync="steps" step="2">
   </azSteps>
   <view class="container">
     <view class="weui-cells weui-cells_after-title">
@@ -37,6 +37,7 @@
         </view>
       </view>
     </view>
+    <button class="weui-btn" type="primary" bindtap="next">下一步</button>
   </view>
 </template>
 
@@ -77,7 +78,15 @@
     components = {
       azSteps: AzSteps
     };
-    methods = {};
+    methods = {
+      next() {
+        wepy.navigateTo({
+          url: `/pages/success?msg=` + JSON.stringify({
+              steps: this.steps
+          })
+        })
+      }
+    };
     events = {};
     watch = {};
     computed = {};

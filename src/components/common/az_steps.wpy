@@ -3,7 +3,7 @@
   <view class="az-steps-bg">
     <view class="az-steps">
       <block wx:for="{{steps}}" wx:key="*this">
-        <view class="az-step-item {{index < step? 'az-step-item-process' : ''}} ">
+        <view class="az-step-item {{!step || index < step? 'az-step-item-process' : ''}} ">
           <view class="az-step-item-icon">
             <view>{{index + 1}}</view>
           </view>
@@ -28,7 +28,7 @@
         default: []
       },
       step: {
-        default: 1
+
       }
     };
     components = {};
@@ -40,7 +40,8 @@
     /**
      * 生命周期函数--监听页面加载
      */
-    onLoad(options) {};
+    onLoad(options) {
+    };
     /**
      * 生命周期函数--监听页面初次渲染完成
      */

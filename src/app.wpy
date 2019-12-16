@@ -30,6 +30,7 @@
         'pages/index',
         'pages/info',
         'pages/search',
+        'pages/success',
         'pages/route/route_release',
         'pages/route/msg_success',
         'pages/route/route_detail',

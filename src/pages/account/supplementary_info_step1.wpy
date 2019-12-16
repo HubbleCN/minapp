@@ -1,15 +1,15 @@
 <!--  -->
 <template>
-  <azSteps :steps.sync="steps" :step.sync="1">
+  <azSteps :steps.sync="steps" step="1">
   </azSteps>
   <view class="container">
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
-          <view class="weui-label">称呼</view>
+          <view class="weui-label">联系人</view>
         </view>
         <view class="weui-cell__bd">
-          <input class="weui-input" bindinput="bindPhoneInput" placeholder="请输入称呼" value="{{phone}}" />
+          <input class="weui-input" bindinput="bindNameInput" placeholder="请输入联系人" value="{{name}}" />
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -25,7 +25,10 @@
           <view class="weui-label">微信号</view>
         </view>
         <view class="weui-cell__bd">
-          <input class="weui-input" bindinput="bindPhoneInput" placeholder="请输入微信号" value="{{phone}}" />
+          <input class="weui-input" bindinput="bindWechatPhoneInput" placeholder="请输入微信号" value="{{wechatPhone}}" />
+        </view>
+        <view class="weui-cell__ft">
+          <i class="iconfont icon-tongbu" @tap="bindWechatPhoneSync"></i>
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -33,11 +36,41 @@
           <view class="weui-label">支付宝</view>
         </view>
         <view class="weui-cell__bd">
-          <input class="weui-input" bindinput="bindPhoneInput" placeholder="请输入支付宝账号" value="{{phone}}" />
+          <input class="weui-input" bindinput="bindAlipayPhoneInput" placeholder="请输入支付宝账号" value="{{alipayPhone}}" />
+        </view>
+        <view class="weui-cell__ft">
+          <i class="iconfont icon-tongbu" @tap="bindAlipayPhoneSync"></i>
+        </view>
+      </view>
+      <view class="weui-cell">
+        <view class="weui-cell__bd">
+          <view class="weui-uploader">
+            <view class="weui-uploader__hd">
+              <view class="weui-uploader__title">微信收款码</view>
+              <view class="weui-uploader__info">{{files.length}}/1</view>
+            </view>
+            <view class="weui-uploader__bd">
+              <view class="weui-uploader__files" id="uploaderFiles">
+                <block wx:for="{{files}}" wx:key="*this">
+                  <view class="weui-uploader__file" @tap="previewImage" id="{{item}}">
+                    <image class="weui-uploader__img" src="{{item}}" mode="aspectFill" />
+                  </view>
+                </block>
+              </view>
+              <view class="weui-uploader__input-box">
+                <view class="weui-uploader__input" @tap="chooseImage"></view>
+              </view>
+            </view>
+          </view>
         </view>
       </view>
     </view>
     <button class="weui-btn" type="primary" bindtap="next">下一步</button>
+    <view class="az-tips">
+      <view class="tips-title"><i class="iconfont icon-tishi"></i>温馨提示</view>
+      <view>1.请确保录入信息准确无误</view>
+      <view>2.微信收款码：【微信】 - 我 - 支付 - 收款码 - 二维码收款 - 保存收款码</view>
+    </view>
   </view>
 </template>
 
@@ -70,18 +103,83 @@
           desc: '第三步'
         }
       ],
-      options: {},
-      points: [],
-      verifyCode: '',
-      isFullSucreen: false
+      files: [],
+      name: '',
+      phone: '',
+      wechatPhone: '',
+      alipayPhone: '',
+      wechatPayQrcode: ''
     };
     components = {
       azSteps: AzSteps
     };
     methods = {
+      bindNameInput(e) {
+        this.name = e.detail.value
+      },
+      bindPhoneInput(e) {
+        this.phone = e.detail.value
+      },
+      bindWechatPhoneInput(e) {
+        this.wechatPhone = e.detail.value
+      },
+      bindWechatPhoneSync(e) {
+        if (this.phone) {
+          this.wechatPhone = this.phone
+        }
+      },
+      bindAlipayPhoneInput(e) {
+        this.alipayPhone = e.detail.value
+      },
+      bindAlipayPhoneSync(e) {
+        if (this.phone) {
+          this.alipayPhone = this.phone
+        }
+      },
+      chooseImage(e) {
+        wepy.chooseImage({
+          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ['album', 'camera'] // 可以指定来源是相册还是相机，默认二者都有
+        }).then(res => {
+          // 上传文件
+          api.uploadFile({
+            filePath: res.tempFilePaths[0],
+            success: upres => {
+              // this.files = this.files.concat(res.tempFilePaths)
+              this.files = res.tempFilePaths
+              this.wechatPayQrcode = upres.data
+              this.$apply()
+            }
+          })
+        })
+      },
+      previewImage(e) {
+        wepy.previewImage({
+          current: e.currentTarget.id, // 当前显示图片的http链接
+          urls: this.data.files // 需要预览的图片http链接列表
+        })
+      },
       next() {
-        wepy.navigateTo({
-          url: `/pages/account/supplementary_info_step2`
+        util.validateNotEmpty(this.name, '联系人未填')
+        util.validateNotEmpty(this.phone, '手机号码未填')
+        util.validateNotEmpty(this.wechatPhone, '微信手机号未填')
+        util.validateNotEmpty(this.alipayPhone, '支付宝账号未填')
+        util.validateNotEmpty(this.wechatPayQrcode, '微信收款码缺失')
+        var params = {
+          name: this.name,
+          phone: this.phone,
+          wechatPhone: this.wechatPhone,
+          alipayPhone: this.alipayPhone,
+          wechatPayQrcode: this.wechatPayQrcode
+        }
+        api.saveUserInfo({
+          method: 'POST',
+          query: params,
+          success: res => {
+            wepy.navigateTo({
+              url: `/pages/account/supplementary_info_step2`
+            })
+          }
         })
       }
     };
@@ -100,5 +198,9 @@
   .weui-cells {
     width: 750rpx;
     margin-top: 20rpx;
+  }
+  .weui-cell__ft .iconfont {
+    font-size: 24px;
+    color: @azuiPrimaryColor;
   }
 </style>

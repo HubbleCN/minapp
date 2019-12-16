@@ -51,14 +51,14 @@ const wxRequest = async (params = {}, url) => {
             }
             // 成功回调
             if (
-              result.data.msg === 'ok' &&
+              result.data.code === '1' &&
               success &&
               typeof success === 'function'
             ) {
               success(result.data)
             }
             // 失败回调
-            if (result.data.msg !== 'ok') {
+            if (result.data.code !== '1') {
               // 300005 token无效
               if (result.data.code !== '300005') {
                 wepy.showToast({

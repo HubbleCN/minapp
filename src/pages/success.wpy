@@ -1,0 +1,69 @@
+<template>
+  <azSteps :steps.sync="steps">
+  </azSteps>
+  <view class="container">
+    <view class="weui-msg">
+      <view class="weui-msg__icon-area">
+        <icon type="success" size="93"></icon>
+      </view>
+      <view class="weui-msg__text-area">
+        <view class="weui-msg__title">操作成功</view>
+        <view class="weui-msg__desc" wx:if="desc">{{desc}}
+        </view>
+      </view>
+      <view class="weui-msg__opr-area">
+        <view class="weui-btn-area">
+          <button class="weui-btn" type="primary" bindtap="goHome">好的</button>
+          <!-- <button class="weui-btn" type="default">辅助操作</button> -->
+        </view>
+      </view>
+      <view class="weui-msg__extra-area">
+        <view class="weui-footer">
+          <view class="weui-footer__links">
+            <navigator url="" class="weui-footer__link">底部链接文本</navigator>
+          </view>
+          <view class="weui-footer__text">Copyright © 2008-2016 weui.io</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import AzSteps from '@/components/common/az_steps'
+  export default class Success extends wepy.page {
+    config = {
+      backgroundColor: '#ffffff'
+    };
+    data = {
+      steps: []
+    };
+    components = {
+      azSteps: AzSteps
+    };
+    methods = {
+      goHome() {
+        wepy.switchTab({
+          url: '/pages/home'
+        })
+      }
+    };
+    onLoad(options) {
+      this.options = options
+      var msg = JSON.parse(options.msg);
+      this.steps = msg.steps;
+      this.desc = msg.desc;
+    };
+    onShow() {
+      console.log('====================================');
+      console.log('onshow');
+      console.log('====================================');
+    }
+    onUnload() {
+      // wepy.navigateBack({
+      //    delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+      // });
+    }
+  }
+</script>

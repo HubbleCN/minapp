@@ -211,6 +211,18 @@ function debug(v) {
   console.log(JSON.stringify(v))
 }
 
+function validateNotEmpty(value, errorMsg) {
+  if (!value) {
+    wx.showToast({
+      title: errorMsg,
+      icon: 'none',
+      mask: true,
+      duration: 1000
+    })
+    throw new Error(errorMsg)
+  }
+}
+
 module.exports = {
   getCurrentTime: getCurrentTime,
   objLength: objLength,
@@ -228,5 +240,6 @@ module.exports = {
   fib,
   formatDateTime,
   compareVersion,
-  debug
+  debug,
+  validateNotEmpty
 }
