@@ -1,8 +1,5 @@
 @import './base/fn.less';
 
-@azuiPrimaryColor: #e22727;
-@weuiBtnDefaultGap: 30rpx;
-
 .container {
   height: 100%;
   display: flex;
@@ -10,6 +7,13 @@
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
+}
+
+.has-bottom-bar {
+  padding-bottom: 150rpx;
+  &.is-full-screen{
+    padding-bottom: 250rpx;
+  }
 }
 
 page {
@@ -140,6 +144,12 @@ page {
   }
 }
 
+.az-fill::after {
+  content: '*';
+  color: @azuiPrimaryColor;
+  padding: 0 2px;
+}
+
 .az-grids {
   overflow: hidden;
   .display-flex();
@@ -198,40 +208,69 @@ page {
   display: flex;
   background: white;
 
+  &.fix-full-screen {
+    height: 168rpx;
+  }
+
   .weui-agree {
     padding: 0;
   }
 
   .col {
-    flex: 1;
     .display-flex();
     .align-items(center);
-    padding: 0 20rpx
+    padding: 0 20rpx;
+
+    .iconfont {
+      font-size: unset;
+      margin-right: 8rpx;
+    }
+  }
+
+
+
+  .default-btn {
+    min-width: 140rpx;
+    text-align: center;
+    position: relative;
+    .justify-content(center);
+    &:not(:last-child) {
+      &:after {
+        .setHalfLine(right);
+      }
+    }
   }
 
   .confirm-btn {
+    .flex(1);
+    .display-flex();
+    .justify-content(center);
     background: @azuiPrimaryColor;
     color: white;
-    max-width: 240rpx;
     align-items: center;
-    display: flex;
-    justify-content: center;
+    &.unchecked {
+      background: #aaaaaa;
+    }
+  }
+
+  .bottom-label + .confirm-btn {
+    max-width: 240rpx;
   }
 
 }
 
-.fix-full-screen {
-  bottom: 68rpx !important;
+.fix-full-screen > view {
+  padding-bottom: 68rpx !important;
 }
 
-.fix-full-screen::after {
-  content: ' ';
-  position: fixed;
-  bottom: 0 !important;
-  height: 68rpx !important;
-  width: 100%;
-  background: white;
-}
+// .fix-full-screen::after {
+//   content: ' ';
+//   position: fixed;
+//   bottom: 0 !important;
+//   height: 68rpx !important;
+//   width: 100%;
+//   background: white;
+// }
 
 .pc-routes {
   padding: 20rpx 0;
@@ -333,5 +372,40 @@ button[type=primary].weui-btn {
        margin-right: 10rpx;
        font-size: 24rpx;
      }
+  }
+}
+
+.iconfont.icon-dian.origin {
+  color: #36ab60;
+}
+.iconfont.icon-dian.destination {
+  color: #ea9518;
+}
+
+.fixed-button {
+  width: 80rpx;
+  height: 80rpx;
+  position: fixed;
+  bottom: 60rpx;
+  background: @azuiPrimaryColor;
+  border-radius: 50%;
+  color: #fff;
+  box-shadow: 2rpx 2rpx 10rpx 0 rgba(0, 0, 0, 0.1);
+  .az-hover {
+    color: rgba(255,255,255,0.6);
+  }
+  button {
+    background: transparent;
+    padding: 0;
+    width: 80rpx;
+    height: 80rpx;
+    line-height: 80rpx;
+    color: #fff;
+    &:after {
+      border: none;
+    }
+    .iconfont {
+      font-size: 48rpx;
+    }
   }
 }

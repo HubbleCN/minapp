@@ -19,13 +19,14 @@ const uploadRequest = async (params = {}) => {
             filePath: params.filePath,
             name: 'file',
             header: {
-              token: wx.getStorageSync('token') || ''
+              token: wx.getStorageSync('token') || '',
+              cookie: wepy.getStorageSync('sessionid')
             }
           })
           .then(res => {
-            console.log('====================================')
-            console.log(res)
-            console.log('====================================')
+            if (res.header['Set-Cookie']) {
+              wepy.setStorageSync('sessionid', res.header['Set-Cookie'])
+            }
             if (res.statusCode !== 200) {
               wepy.showToast({
                 title: `服务异常, ${res.statusCode}`,

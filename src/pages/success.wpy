@@ -1,6 +1,7 @@
 <template>
-  <azSteps :steps.sync="steps">
-  </azSteps>
+  <view wx:if="{{steps.length > 0}}">
+    <azSteps :steps.sync="steps"></azSteps>
+  </view>
   <view class="container">
     <view class="weui-msg">
       <view class="weui-msg__icon-area">
@@ -20,7 +21,7 @@
       <view class="weui-msg__extra-area">
         <view class="weui-footer">
           <view class="weui-footer__links">
-            <navigator url="" class="weui-footer__link">底部链接文本</navigator>
+            <navigator bindtap="donate" class="weui-footer__link">赞赏作者</navigator>
           </view>
           <view class="weui-footer__text">Copyright © 2008-2016 weui.io</view>
         </view>
@@ -47,23 +48,30 @@
         wepy.switchTab({
           url: '/pages/home'
         })
+      },
+      donate(e) {
+        wepy.previewImage({
+          urls: [`${api.serverUrl}uploads/static/666.jpg`] // 需要预览的图片http链接列表
+        })
       }
     };
     onLoad(options) {
       this.options = options
-      var msg = JSON.parse(options.msg);
-      this.steps = msg.steps;
-      this.desc = msg.desc;
+      var msg = JSON.parse(options.msg)
+      this.steps = msg.steps
+      this.desc = msg.desc
+      this.delta = msg.delta
     };
     onShow() {
-      console.log('====================================');
-      console.log('onshow');
-      console.log('====================================');
     }
     onUnload() {
-      // wepy.navigateBack({
-      //    delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
-      // });
+      // 加上这个会导致onshow生命周期函数执行两次
+      // if (this.delta) {
+      //   wepy.navigateBack({
+      //     delta: this.delta //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+      //   })
+      // }
+
     }
   }
 </script>

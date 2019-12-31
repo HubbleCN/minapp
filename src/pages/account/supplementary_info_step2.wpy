@@ -9,7 +9,8 @@
           <view class="weui-label">车牌</view>
         </view>
         <view class="weui-cell__bd">
-          <input class="weui-input" bindinput="bindPhoneInput" placeholder="请输入车牌" value="{{phone}}" />
+          <input class="weui-input" value="{{carNum}}" placeholder="请填写车牌" @tap="showCNModal" />
+          <carNum :show.sync="showCarnumModal" @fillCarNum.user="fillCarNum">请填写车牌</carNum>
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -17,7 +18,7 @@
           <view class="weui-label">品牌</view>
         </view>
         <view class="weui-cell__bd">
-          <input class="weui-input" bindinput="bindPhoneInput" placeholder="请输入品牌" value="{{phone}}" />
+          <input class="weui-input" bindinput="bindBrandInput" placeholder="请输入汽车品牌" value="{{brand}}" />
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -25,15 +26,7 @@
           <view class="weui-label">颜色</view>
         </view>
         <view class="weui-cell__bd">
-          <input class="weui-input" bindinput="bindPhoneInput" placeholder="请输入颜色" value="{{phone}}" />
-        </view>
-      </view>
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
-          <view class="weui-label">类型</view>
-        </view>
-        <view class="weui-cell__bd">
-          <input class="weui-input" bindinput="bindPhoneInput" placeholder="请输入类型" value="{{phone}}" />
+          <input class="weui-input" bindinput="bindColorInput" placeholder="请输入车身颜色" value="{{color}}" />
         </view>
       </view>
     </view>
@@ -46,6 +39,7 @@
   import util from '@/utils/util'
   import moment from 'moment'
   import api from '@/api/api'
+  import CarNumber from '@/components/common/car_number'
   import AzSteps from '@/components/common/az_steps'
   export default class SupplementaryInfoStep2 extends wepy.page {
     config = {
@@ -70,21 +64,63 @@
           desc: '第三步'
         }
       ],
-      options: {},
-      points: [],
-      verifyCode: '',
-      isFullSucreen: false
+      carNum: '',
+      brand: '',
+      color: '',
+      showCarnumModal: false,
+      preData: {}
     };
     components = {
-      azSteps: AzSteps
+      azSteps: AzSteps,
+      carNum: CarNumber
     };
     methods = {
+      bindBrandInput(e) {
+        this.brand = e.detail.value
+      },
+      bindColorInput(e) {
+        this.color = e.detail.value
+      },
+      showCNModal() {
+        console.log('showCNModal')
+        this.showCarnumModal = true
+        this.$apply()
+      },
+      fillCarNum(carnum, evt) {
+        this.showCarnumModal = false
+        this.carNum = carnum.join('')
+      },
       next() {
-        wepy.navigateTo({
-          url: `/pages/success?msg=` + JSON.stringify({
+        util.validateNotEmpty(this.carNum, '车牌号未填')
+        util.validateNotEmpty(this.brand, '品牌未填')
+        util.validateNotEmpty(this.color, '车身颜色未填')
+        var params = {
+          carNum: this.carNum,
+          brand: this.brand,
+          color: this.color
+        }
+        let editData = JSON.parse(JSON.stringify(this.preData))
+        Object.assign(editData, params)
+        // 未做任何修改
+        if (JSON.stringify(editData) === JSON.stringify(this.preData)) {
+          wepy.navigateTo({
+            url: `/pages/success?msg=` + JSON.stringify({
               steps: this.steps
+            })
           })
-        })
+        } else {
+          api.saveCarInfo({
+            method: 'POST',
+            query: editData,
+            success: res => {
+              wepy.navigateTo({
+                url: `/pages/success?msg=` + JSON.stringify({
+                  steps: this.steps
+                })
+              })
+            }
+          })
+        }
       }
     };
     events = {};
@@ -92,6 +128,16 @@
     computed = {};
     onLoad(options) {
       this.options = options
+      api.getCurrentCarInfo({
+        method: 'POST',
+        success: res => {
+          this.carNum = res.data.carNum
+          this.brand = res.data.brand
+          this.color = res.data.color
+          this.preData = res.data
+          this.$apply()
+        }
+      })
     }
     onShow() {};
   }

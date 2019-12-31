@@ -1,46 +1,51 @@
 <!-- 首页 -->
 <template>
   <view class='container'>
-    <view class="sliders-zone">
-      <swiper class="sliders" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular indicator-color="rgba(255, 255, 255, .3)" indicator-active-color="#FFFFFF">
-        <block wx:for="{{imgUrls}}" wx:key="*this">
-          <swiper-item>
-            <image src="{{item}}" class="slide-image"></image>
-          </swiper-item>
-        </block>
-      </swiper>
-    </view>
-    <!-- <view class="main-menus">
-                        <view class="az-grids">
-                          <navigator class="az-grid col" url="/pages/route/route_release" hover-class="az-grid_active">
-                            <view class="az-row">
-                              <i class="iconfont icon-car"></i>
-                              <view class="az-col main-menu-text">
-                                <view class="text">车找人</view>
-                                <view class="tip">发布拼车信息</view>
-                              </view>
-                            </view>
-                          </navigator>
+    <!-- <view class="sliders-zone">
+        <swiper class="sliders" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular indicator-color="rgba(255, 255, 255, .3)" indicator-active-color="#FFFFFF">
+          <block wx:for="{{imgUrls}}" wx:key="*this">
+            <swiper-item>
+              <image src="{{item}}" class="slide-image"></image>
+            </swiper-item>
+          </block>
+        </swiper>
+      </view> -->
+    <!-- <view class="home-search-bar az-row">
+                  <view class="weui-search-bar">
+                    <view class="weui-search-bar__form">
+                      <view class="weui-search-bar__box">
+                        <icon class="weui-icon-search_in-box" type="search" size="16"></icon>
+                        <input type="text" class="weui-search-bar__input" placeholder="搜索" value="{{inputVal}}" bindinput="inputTyping" />
+                        <view class="weui-icon-clear" wx:if="{{inputVal.length > 0}}" bindtap="clearInput">
+                          <icon type="clear" size="16"></icon>
                         </view>
-                      </view> -->
-    <view class="home-search-bar az-row">
-      <view class="nearby-search" bindtap="chooseLocation">
-        <i class="iconfont icon-fujin"></i>
-      </view>
-      <view class="weui-search-bar">
-        <view class="weui-search-bar__form">
-          <view class="weui-search-bar__box">
-            <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
-            <input type="text" class="weui-search-bar__input" placeholder="搜索" value="{{inputVal}}" bindinput="inputTyping" />
-            <view class="weui-icon-clear" wx:if="{{inputVal.length > 0}}" bindtap="clearInput">
-              <icon type="clear" size="14"></icon>
-            </view>
+                        <view class="nearby-search" bindtap="chooseLocation" wx:if="{{inputVal.length <= 0}}">
+                          <i class="iconfont icon-fujin"></i>
+                        </view>
+                      </view>
+                    </view>
+                  </view>
+                  <view class="release-route" bindtap="releaseNew">
+                    <i class="iconfont icon-icon_fabu"></i>
+                  </view>
+                </view> -->
+    <view class="home-search ">
+      <view class="az-row">
+        <view class="locations">
+          <view class="location-name az-row">
+            <i class="iconfont icon-dian origin"></i>
+            <input type="text" class="weui-search-bar__input" value="{{origin.locationName}}" placeholder="选择起点" catchtap="chooseMapLocation('origin')" />
+          </view>
+          <view class="location-name az-row">
+            <i class="iconfont icon-dian destination"></i>
+            <input type="text" class="weui-search-bar__input" value="{{destination.locationName}}" placeholder="选择终点" catchtap="chooseMapLocation('destination')" />
           </view>
         </view>
+        <view class="buttons">
+          <i class="iconfont icon-exchange" bindtap="exchangeLocation"></i>
+        </view>
       </view>
-      <view class="release-route" bindtap="releaseNew">
-        <i class="iconfont icon-icon_fabu"></i>
-      </view>
+      <button class="weui-btn" type="primary" bindtap="next">查询</button>
     </view>
     <view class="pc-routes" wx:if="{{!is_empty}}">
       <view class="pc-route-item" wx:for="{{pageData.list}}" wx:key="id" bindtap="detail({{item}})">
@@ -58,25 +63,27 @@
               <image class="user-avatar" src="{{item.avatarUrl}}" />
             </view>
           </view>
+        </view>
+        <view class="pc-route-footer">
           <view class="az-row">
-            <view class="datetime"><i class="iconfont icon-ico_time time"></i><text class="label-value">{{item.ddatetime}}</text></view>
+            <view class="datetime"><i class="iconfont icon-ico_time time"></i><text class="label-value">{{item.ddatetime}} 出发</text></view>
             <view class="seat">
               <i class="iconfont icon-zuowei seat-used" wx:for="{{item.dseatUsed}}" wx:key="*this"></i>
               <i class="iconfont icon-zuoweianpai seat-empty" wx:for="{{item.dseatEmpty}}" wx:key="*this"></i>
             </view>
           </view>
-        </view>
-        <view class="pc-route-footer">
-          <view wx:if="{{item.via}}"><text class="label-value">途经：{{item.via}}</text></view>
-          <view class="az-row">
-            <view><text class="label-value">单程价：{{item.price}} 元</text></view>
-            <view><text class="label-value">浏览{{item.views}}次</text></view>
-          </view>
+          <view wx:if="{{item.via}}"><i class="iconfont icon-icon-test34"></i><text class="label-value">途经：{{item.via}}</text></view>
+          <!-- <view class="az-row">
+                        <view><text class="label-value">单程价：{{item.price}} 元</text></view>
+                        <view><text class="label-value">浏览{{item.views}}次</text></view>
+                      </view> -->
         </view>
       </view>
     </view>
+    <view class="fixed-button">
+      <button bindtap="releaseNew" hover-class="az-hover"><i class="iconfont icon-icon_fabu"></i></button>
+    </view>
     <placeholder :show.sync="is_empty" message="暂无数据"></placeholder>
-    <loading :loading.sync="loading" message=""></loading>
   </view>
 </template>
 
@@ -84,6 +91,7 @@
   import wepy from 'wepy'
   import util from '@/utils/util'
   import api from '@/api/api'
+  import tip from '@/utils/tip'
   import moment from 'moment'
   import Placeholder from '@/components/common/placeholder'
   import Loading from '@/components/common/loading'
@@ -103,19 +111,19 @@
       interval: 4000,
       duration: 1000,
       inputVal: '',
+      origin: {},
+      destination: {},
       is_empty: false,
-      location: {},
+      location: null,
       pageData: {
         pageNum: 1,
         pageSize: 5,
         noMore: false,
         list: []
       },
-      loading: false
     };
     components = {
-      placeholder: Placeholder,
-      loading: Loading
+      placeholder: Placeholder
     };
     methods = {
       clearInput() {
@@ -125,25 +133,54 @@
         this.inputVal = e.detail.value
       },
       releaseNew() {
-        wepy.navigateTo({
-          url: '/pages/route/route_release'
+        // 发布新的拼车信息
+        api.checkReleasePermission({
+          method: 'POST',
+          showLoading: true,
+          success: res => {
+            if (res.data === true) {
+              wepy.navigateTo({
+                url: '/pages/route/route_release'
+              })
+            } else {
+              tip.confirm('用户基本信息不全').then(() => {
+                wepy.navigateTo({
+                  url: '/pages/account/supplementary_info_step1'
+                })
+              })
+            }
+          }
         })
       },
       chooseLocation() {
         wepy.chooseLocation().then(res => {
           util.debug(res)
-        }, () => {
-          wepy.showToast({
-            title: '请确保GPS已打开',
-            icon: 'none',
-            duration: 2000
-          })
+        }, () => {})
+      },
+      chooseMapLocation(key) {
+        const that = this
+        wepy.chooseLocation().then(res => {
+          that[key] = {
+            longitude: res.longitude,
+            latitude: res.latitude,
+            locationAddress: res.address,
+            locationName: res.name
+          }
+          util.debug(that[key])
+          wepy.setStorageSync(key, that[key])
         })
       },
       detail(item) {
         wepy.navigateTo({
           url: `/pages/route/route_detail?id=${item.id}`
         })
+      },
+      exchangeLocation() {
+        let tmp = this.origin
+        this.origin = this.destination
+        this.destination = tmp
+        wepy.setStorageSync('origin', this.origin)
+        wepy.setStorageSync('destination', this.destination)
       }
     };
     events = {};
@@ -158,21 +195,28 @@
           latitude: res.latitude,
           longitude: res.longitude
         }
-        this.$apply()
-        this.loading = true
         this.loadData()
       })
     }
-    loadData() {
+    loadData(cleanFirst = true) {
+      if (cleanFirst) {
+        this.pageData = {
+          pageNum: 1,
+          pageSize: 5,
+          noMore: false,
+          list: []
+        }
+        this.is_empty = false
+      }
       api.getRouteRecommendation({
         method: 'POST',
+        showLoading: true,
         query: {
           fromLatitude: this.location.latitude,
           fromLongitude: this.location.longitude,
           pageNum: this.pageData.pageNum,
           pageSize: this.pageData.pageSize
         },
-        // showLoading: true,
         success: res => {
           if (res.total === 0) {
             this.is_empty = true
@@ -195,7 +239,6 @@
           this.$apply()
         },
         final: () => {
-          this.loading = false
           // 不加这个方法真机下拉会一直处于刷新状态，无法复位
           wepy.stopPullDownRefresh()
           this.$apply()
@@ -211,7 +254,7 @@
             scope: 'scope.userLocation'
           }).then(res => {
             this.initParams()
-          }, error => {
+          }, () => {
             wepy.showToast({
               title: '请确保GPS已打开',
               icon: 'none',
@@ -221,8 +264,8 @@
         } else {
           // 未授权
           wx.showModal({
-            title: "温馨提示",
-            content: "系统需要获取您的地理位置",
+            title: '温馨提示',
+            content: '系统需要获取您的地理位置',
             success(res) {
               console.log('用户未授权')
               if (res.confirm) {
@@ -234,67 +277,127 @@
       })
     };
     onLoad() {
-      this.getLocation()
+      // this.getLocation()
     };
     onShow() {
+      this.origin = wepy.getStorageSync('origin') || {}
+      this.destination = wepy.getStorageSync('destination') || {}
+      if (this.location === null) {
+        console.log('执行getLocation')
+        this.getLocation()
+      } else {
+        this.loadData()
+      }
     };
     onReady() {};
     onPullDownRefresh() {
-      console.log('下拉刷新列表')
-      this.pageData.pageNum = 1
-      this.pageData.noMore = false
-      this.pageData.list = []
-      this.loading = true
       this.loadData()
     }
     onReachBottom() {
-      if (!this.pageData.noMore && !this.loading) {
-        this.loading = true
-        this.loadData()
+      if (!this.pageData.noMore) {
+        this.loadData(false)
       }
     }
   }
 </script>
 
 <style lang='less'>
+  @import '../style/base/fn.less';
   .sliders-zone {
     position: relative;
     width: 100%;
-    border-radius: 0 0 5% 5%;
-    overflow: hidden;
     .sliders {
       width: 100%;
       height: 300rpx;
+      border-radius: 0 0 8% 8%;
+      overflow: hidden;
+      -webkit-backface-visibility: hidden;
+      -webkit-transform: translate3d(0, 0, 0);
     }
     .slide-image {
       width: 100%; //height: 500rpx;
     }
   }
   .home-search-bar {
-    width: 750rpx;
-    margin-top: 20rpx;
+    width: 710rpx;
+    margin-top: 10rpx;
     .weui-search-bar {
       border: none;
       background-color: transparent;
       flex: 1;
+      padding: 0 10rpx 0 0;
+      .weui-icon-search_in-box {
+        top: 24rpx;
+      }
+      .weui-search-bar__input {
+        height: 80rpx;
+        line-height: 80rpx;
+      }
+      .weui-icon-clear {
+        padding: 24rpx 16rpx;
+      }
     }
     .weui-search-bar__label {
       right: 8rpx;
       border-radius: 5px;
     }
     .nearby-search {
-      margin-left: 20rpx;
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 2rpx 6rpx;
+      font-size: 0;
       .iconfont {
-        font-size: 52rpx;
-        line-height: 82rpx;
+        font-size: 48rpx;
       }
     }
     .release-route {
-      margin-right: 20rpx;
+      padding: 0 25rpx;
+      background: @azuiPrimaryColor;
+      color: #ffffff;
+      border-radius: 40rpx;
+      height: 74rpx;
+      margin-top: 4rpx;
       .iconfont {
-        font-size: 42rpx;
-        line-height: 82rpx;
+        font-size: 40rpx;
+        line-height: 72rpx;
       }
+    }
+  }
+  .home-search {
+    background: #ffffff;
+    width: 750rpx; // padding-left: 50rpx;
+    .locations {
+      .flex(1);
+    }
+    .buttons {
+      .align-items(center);
+      .display-flex();
+      .justify-content(center);
+      .iconfont {
+        font-size: 48rpx;
+        padding: 16rpx;
+        color: rgba(0, 0, 0, .85);
+      }
+    }
+    .location-name {
+      padding: 18rpx 20rpx;
+      position: relative;
+      .align-items(center);
+      .iconfont {
+        margin-right: 20rpx;
+      }
+      &:not(:last-child) {
+        &:after {
+          .setHalfLine(bottom);
+        }
+      }
+      input {
+        .flex(1);
+      }
+    }
+    button[type=primary].weui-btn {
+      margin: 20rpx auto;
     }
   }
   .main-menus {

@@ -1,9 +1,14 @@
 <!--  -->
 <template>
-  <view class="container">
+  <view class="container {{enableFollow||isAuthor?'has-bottom-bar':''}} {{isFullScreen?'is-full-screen':''}}">
     <map id="map" include-points="{{points}}" markers="{{markers}}" bindcontroltap="controltap" bindmarkertap="markertap" bindregionchange="regionchange" show-location style="width: 100%; height: 300rpx;"></map>
     <view class="route">
       <view class="route-hd">
+        <view class="az-row author-info">
+          <image class="avatar" src="{{route.avatarUrl}}" />
+          <view class="author-name">{{route.linkman}}</view>
+          <i class="iconfont icon-icon-test20" bindtap="phoneCall({{route.phone}})"></i>
+        </view>
         <view class="az-row">
           <view class="locations az-col">
             <view class="az-row">
@@ -12,9 +17,6 @@
             <view class="az-row">
               <view class="location-name"><i class="iconfont icon-dian destination"></i>{{route.toLocationName}}</view>
             </view>
-          </view>
-          <view>
-            <image class="user-avatar" src="{{route.avatarUrl}}" />
           </view>
         </view>
       </view>
@@ -40,34 +42,43 @@
           <view class="label">浏览次数</view>
           <view class="value">{{route.views}}次</view>
         </view>
-        <view class="item az-row">
+        <view class="item az-row" wx:if="{{route.via}}">
           <view class="label">途径</view>
-          <view class="value">直达或附近</view>
+          <view class="value">{{route.via}}</view>
         </view>
       </view>
+      <block wx:if="{{followers}}">
+        <view class="route-followers">
+          <block wx:for="{{followers}}" wx:key="*this">
+            <view class="route-follower az-row">
+              <image class="avatar" src="{{item.avatarUrl}}" />
+              <view class="follower-info">
+                <view>{{item.linkman}}</view>
+                <view class="remark">{{item.remark}}</view>
+              </view>
+              <view class="buttons"><i class="iconfont icon-icon-test20" bindtap="phoneCall({{item.phone}})"></i></view>
+            </view>
+          </block>
+        </view>
+      </block>
+      <!-- <view class="wechat-pay-qrcode">
+                        <image mode="aspectFit" show-menu-by-longpress="true" src="{{route.wechatPayQrcode}}" />
+                      </view> -->
+      <!-- <view class="footer-bar az-row" wx:if="{{!isAuthor}}"> -->
       <view class="footer-bar az-row">
-        <view><i class="iconfont icon-copy"></i>复制信息</view>
-        <view><i class="iconfont icon-icon-test20"></i>打电话</view>
-        <view><i class="iconfont icon-zhifubaozhanghu"></i>复制账号</view>
+        <view bindtap="copyRouteInfo"><i class="iconfont icon-icon-test12"></i>分享</view>
+        <view bindtap="copy({{route.wechatPhone}}, '微信已复制')" wx:if="{{isFollower}}"><i class="iconfont icon-weixin"></i>微信</view>
+        <view bindtap="copy({{route.alipayPhone}}, '支付宝已复制')" wx:if="{{isFollower}}"><i class="iconfont icon-zhifubaozhanghu"></i>支付宝</view>
       </view>
-    </view>
-    <view class="bottom-bar {{isFullSucreen?'fix-full-screen':''}} az-row">
-      <view class="col bottom-label">
-        <view class="col bottom-label">
-          <checkbox-group bindchange="bindAgreeChange">
-            <label class="weui-agree" for="weuiAgree">
-                  <view class="weui-agree__text">
-                      <checkbox class="weui-agree__checkbox" id="weuiAgree" value="agree" checked="{{isAgree}}" />
-                      <view class="weui-agree__checkbox-icon">
-                          <icon class="weui-agree__checkbox-icon-check" type="success_no_circle" size="9" wx:if="{{isAgree}}"></icon>
-                      </view>
-                      阅读并同意<navigator url="" class="weui-agree__link">《相关条款》</navigator>
-                  </view>
-              </label>
-          </checkbox-group>
-        </view>
+      </block>
+      <view class="bottom-bar {{isFullScreen?'fix-full-screen':''}} az-row" wx:if="{{enableFollow}}">
+        <view class="col confirm-btn" bindtap="followRoute">跟车</view>
       </view>
-      <view class="col confirm-btn" bindtap="releaseRoute">确认</view>
+      <view class="bottom-bar {{isFullScreen?'fix-full-screen':''}} az-row" wx:if="{{isAuthor}}">
+        <view class="col default-btn" bindtap="copyRouteInfo"><i class="iconfont icon-icon-test12"></i>分享</view>
+        <view class="col default-btn" bindtap="followRoute"><i class="iconfont icon-icon_delete"></i>删除</view>
+        <view class="col confirm-btn" bindtap="followRoute">修改</view>
+      </view>
     </view>
   </view>
 </template>
@@ -77,6 +88,7 @@
   import util from '@/utils/util'
   import moment from 'moment'
   import api from '@/api/api'
+  import tip from '@/utils/tip'
   export default class RouteDetail extends wepy.page {
     config = {
       // navigationBarTitleText: ''
@@ -90,9 +102,12 @@
       origin: {},
       destination: {},
       route: {},
+      enableFollow: false,
+      isAuthor: false,
+      isFollower: false,
+      followers: undefined,
       verifyCode: '',
-      isFullSucreen: false,
-      isAgree: false
+      isFullScreen: false
     };
     components = {};
     methods = {
@@ -105,15 +120,55 @@
       controltap(e) {
         // console.log(e.controlId)
       },
-      bindAgreeChange(e) {
-        this.isAgree = !!e.detail.value.length
+      copy(val, msg) {
+        wepy.setClipboardData({
+          data: val
+        }).then(()=> {
+          if (msg) {
+            wepy.hideToast();
+            tip.toast(msg)
+          }
+        })
+      },
+      phoneCall(phoneNum) {
+        wepy.makePhoneCall({
+          phoneNumber: phoneNum
+        })
+      },
+      copyRouteInfo() {
+        var time = moment(this.route.departureTime).calendar()
+        var text = `${time}${this.route.fromLocationName}出发去${this.route.toLocationName}可带，复制这段文字，打开微信小程序@跟车√${this.route.shareCode}√`
+        tip.confirm(text, {}, '拼车信息', '复制', false).then(() => {
+          wepy.setClipboardData({
+            data: text
+          })
+        })
+      },
+      followRoute() {
+        // 跟车
+        api.checkFollowPermission({
+          method: 'POST',
+          success: res => {
+            if (res.data === true) {
+              wepy.navigateTo({
+                url: `/pages/route/route_follow?id=${this.route.id}&empty=${this.route.dseatEmpty.length}`
+              })
+            } else {
+              tip.confirm('用户基本信息不全').then(() => {
+                wepy.navigateTo({
+                  url: '/pages/account/supplementary_info_step1'
+                })
+              })
+            }
+          }
+        })
       },
     };
     events = {};
     watch = {};
     computed = {};
     onLoad(options) {
-      this.isFullSucreen = this.$parent.globalData.isFullSucreen
+      this.isFullScreen = this.$parent.globalData.isFullScreen
       this.options = options
     }
     onShow() {
@@ -122,7 +177,11 @@
         method: 'GET',
         showLoading: true,
         success: res => {
-          this.route = res.data
+          this.route = res.data.route
+          // this.enableFollow = res.data.enableFollow
+          // this.isAuthor = res.data.isAuthor
+          this.isFollower = res.data.isFollower
+          // this.followers = res.data.followers
           this.route.dtime = moment(this.route.departureTime).format('HH:mm')
           this.route.ddate = moment(this.route.departureTime).format('YYYY-MM-DD')
           this.route.ddatetime = moment(this.route.departureTime).format('YYYY.MM.DD ddd HH:mm')
@@ -160,7 +219,8 @@
 </script>
 
 <style lang='less'>
-  @import '../../style/base.less';
+  @import '../../style/base/fn.less';
+
   .route {
     width: 660rpx;
     padding: 20rpx;
@@ -170,15 +230,66 @@
     margin: 20rpx 0 0 0;
     font-size: 28rpx;
     color: #1a1a1a;
-    .user-avatar {
-      height: 60rpx;
-      width: 60rpx;
+    .avatar {
+      height: 64rpx;
+      width: 64rpx;
       border-radius: 50%;
       margin-right: 20rpx;
     }
     .route-hd {
       position: relative;
+      padding: 0 0 20rpx 0;
+      &:after {
+        .setHalfLine(bottom);
+      }
+      .author-info {
+        .align-items(center);
+        .iconfont {
+          font-size: 40rpx;
+          color: @azuiPrimaryColor;
+          margin: unset;
+          padding: 16rpx;
+        }
+        .author-name {
+          .flex(1);
+          line-height: 32px;
+        }
+        margin-bottom: 20rpx;
+      }
+    }
+    .route-follower {
+      width: 660rpx;
       padding: 20rpx 0;
+      position: relative;
+      &:not(:last-child) {
+        &:after {
+          .setHalfLine(bottom);
+        }
+      }
+      .follower-info {
+        .flex(1);
+        line-height: 32px;
+        .remark {
+          font-size: 22rpx;
+          color: #8a8a8a;
+          line-height: 36rpx;
+        }
+      }
+      .buttons {
+        .display-flex();
+        align-items: center
+      }
+      .buttons .iconfont {
+        font-size: 40rpx;
+        color: @azuiPrimaryColor;
+        margin: unset;
+        padding: 16rpx;
+      }
+    }
+    .wechat-pay-qrcode {
+      width: 660rpx;
+      padding: 20rpx 0;
+      position: relative;
       &:after {
         .setHalfLine(bottom);
       }

@@ -20,26 +20,32 @@
           <input class="weui-input" bindinput="bindPhoneInput" placeholder="请输入手机号" value="{{phone}}" />
         </view>
       </view>
-      <view class="weui-cell weui-cell_input">
+      <view class="weui-cell weui-cell_switch">
+        <view class="weui-cell__bd">微信同号</view>
+        <view class="weui-cell__ft">
+          <switch checked="{{wechatSame}}" bindchange="bindWechatSameChange"></switch>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" wx:if="{{!wechatSame}}">
         <view class="weui-cell__hd">
-          <view class="weui-label">微信号</view>
+          <view class="weui-label">微信手机号</view>
         </view>
         <view class="weui-cell__bd">
           <input class="weui-input" bindinput="bindWechatPhoneInput" placeholder="请输入微信号" value="{{wechatPhone}}" />
         </view>
+      </view>
+      <view class="weui-cell weui-cell_switch">
+        <view class="weui-cell__bd">支付宝同号</view>
         <view class="weui-cell__ft">
-          <i class="iconfont icon-tongbu" @tap="bindWechatPhoneSync"></i>
+          <switch checked="{{alipaySame}}" bindchange="bindAlipaySameChange"></switch>
         </view>
       </view>
-      <view class="weui-cell weui-cell_input">
+      <view class="weui-cell weui-cell_input" wx:if="{{!alipaySame}}">
         <view class="weui-cell__hd">
-          <view class="weui-label">支付宝</view>
+          <view class="weui-label">支付宝手机号</view>
         </view>
         <view class="weui-cell__bd">
           <input class="weui-input" bindinput="bindAlipayPhoneInput" placeholder="请输入支付宝账号" value="{{alipayPhone}}" />
-        </view>
-        <view class="weui-cell__ft">
-          <i class="iconfont icon-tongbu" @tap="bindAlipayPhoneSync"></i>
         </view>
       </view>
       <view class="weui-cell">
@@ -47,15 +53,12 @@
           <view class="weui-uploader">
             <view class="weui-uploader__hd">
               <view class="weui-uploader__title">微信收款码</view>
-              <view class="weui-uploader__info">{{files.length}}/1</view>
             </view>
             <view class="weui-uploader__bd">
               <view class="weui-uploader__files" id="uploaderFiles">
-                <block wx:for="{{files}}" wx:key="*this">
-                  <view class="weui-uploader__file" @tap="previewImage" id="{{item}}">
-                    <image class="weui-uploader__img" src="{{item}}" mode="aspectFill" />
-                  </view>
-                </block>
+                <view wx:if="wechatPayQrcode" class="weui-uploader__file" @tap="previewImage" id="{{wechatPayQrcode}}">
+                  <image class="weui-uploader__img" src="{{wechatPayQrcode}}" mode="aspectFill" />
+                </view>
               </view>
               <view class="weui-uploader__input-box">
                 <view class="weui-uploader__input" @tap="chooseImage"></view>
@@ -103,12 +106,14 @@
           desc: '第三步'
         }
       ],
-      files: [],
       name: '',
       phone: '',
+      alipaySame: true,
+      wechatSame: true,
       wechatPhone: '',
       alipayPhone: '',
-      wechatPayQrcode: ''
+      wechatPayQrcode: '',
+      preData: {}
     };
     components = {
       azSteps: AzSteps
@@ -123,18 +128,14 @@
       bindWechatPhoneInput(e) {
         this.wechatPhone = e.detail.value
       },
-      bindWechatPhoneSync(e) {
-        if (this.phone) {
-          this.wechatPhone = this.phone
-        }
-      },
       bindAlipayPhoneInput(e) {
         this.alipayPhone = e.detail.value
       },
-      bindAlipayPhoneSync(e) {
-        if (this.phone) {
-          this.alipayPhone = this.phone
-        }
+      bindWechatSameChange(e) {
+        this.wechatSame = e.detail.value
+      },
+      bindAlipaySameChange(e) {
+        this.alipaySame = e.detail.value
       },
       chooseImage(e) {
         wepy.chooseImage({
@@ -145,8 +146,6 @@
           api.uploadFile({
             filePath: res.tempFilePaths[0],
             success: upres => {
-              // this.files = this.files.concat(res.tempFilePaths)
-              this.files = res.tempFilePaths
               this.wechatPayQrcode = upres.data
               this.$apply()
             }
@@ -156,12 +155,18 @@
       previewImage(e) {
         wepy.previewImage({
           current: e.currentTarget.id, // 当前显示图片的http链接
-          urls: this.data.files // 需要预览的图片http链接列表
+          urls: [this.wechatPayQrcode] // 需要预览的图片http链接列表
         })
       },
       next() {
         util.validateNotEmpty(this.name, '联系人未填')
         util.validateNotEmpty(this.phone, '手机号码未填')
+        if (this.wechatSame) {
+          this.wechatPhone = this.phone
+        }
+        if (this.alipaySame) {
+          this.alipayPhone = this.phone
+        }
         util.validateNotEmpty(this.wechatPhone, '微信手机号未填')
         util.validateNotEmpty(this.alipayPhone, '支付宝账号未填')
         util.validateNotEmpty(this.wechatPayQrcode, '微信收款码缺失')
@@ -172,15 +177,24 @@
           alipayPhone: this.alipayPhone,
           wechatPayQrcode: this.wechatPayQrcode
         }
-        api.saveUserInfo({
-          method: 'POST',
-          query: params,
-          success: res => {
-            wepy.navigateTo({
-              url: `/pages/account/supplementary_info_step2`
-            })
-          }
-        })
+        let editData = JSON.parse(JSON.stringify(this.preData))
+        Object.assign(editData, params)
+        // 未做任何修改
+        if (JSON.stringify(editData) === JSON.stringify(this.preData)) {
+          wepy.navigateTo({
+            url: `/pages/account/supplementary_info_step2`
+          })
+        } else {
+          api.saveUserInfo({
+            method: 'POST',
+            query: editData,
+            success: res => {
+              wepy.navigateTo({
+                url: `/pages/account/supplementary_info_step2`
+              })
+            }
+          })
+        }
       }
     };
     events = {};
@@ -188,6 +202,18 @@
     computed = {};
     onLoad(options) {
       this.options = options
+      api.getCurrentUserInfo({
+        method: 'POST',
+        success: res => {
+          this.name = res.data.name
+          this.phone = res.data.phone
+          this.wechatPhone = res.data.wechatPhone
+          this.alipayPhone = res.data.alipayPhone
+          this.preData = res.data
+          this.wechatPayQrcode = res.data.wechatPayQrcode
+          this.$apply()
+        }
+      })
     }
     onShow() {};
   }

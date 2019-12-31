@@ -10,7 +10,7 @@ import tip from '@/utils/tip'
 const wxRequest = async (params = {}, url) => {
   const appId = wepy.getAccountInfoSync().miniProgram.appId
 
-  const baseUrl = `${api.serverUrl}/wx/${appId}`
+  const baseUrl = `${api.serverUrl}wx/${appId}`
 
   url = params.url ? `${baseUrl}${params.url}` : `${baseUrl}${url}`
 
@@ -21,7 +21,7 @@ const wxRequest = async (params = {}, url) => {
   // data.sign = SIGN
   // data.time = TIMESTAMP
   let request = function () {
-    if (params.showLoading) {
+    if (params.showLoading === true || params.showLoading === undefined) {
       tip.loading()
     }
     return new Promise((resolve, reject) => {
@@ -30,16 +30,17 @@ const wxRequest = async (params = {}, url) => {
           method: params.method || 'GET',
           data: data,
           header: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            token: wx.getStorageSync('token') || ''
+            'content-type': 'application/json; charset=UTF-8',
+            'Authorization': wx.getStorageSync('token') || '',
+            cookie: wepy.getStorageSync('sessionid')
           }
         })
         .then(
           result => {
-            if (params.showLoading) {
-              tip.loaded()
+            tip.loaded()
+            if (result.header['Set-Cookie']) {
+              wepy.setStorageSync('sessionid', result.header['Set-Cookie'])
             }
-
             if (result.statusCode !== 200) {
               wepy.showToast({
                 title: `服务异常, ${result.statusCode}`,
@@ -81,9 +82,7 @@ const wxRequest = async (params = {}, url) => {
             resolve(result)
           },
           (error) => {
-            if (params.showLoading) {
-              tip.loaded()
-            }
+            tip.loaded()
             wepy.showToast({
               title: '服务异常, 请联系管理员',
               icon: 'none',

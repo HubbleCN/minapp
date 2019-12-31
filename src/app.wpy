@@ -27,42 +27,42 @@
       pages: [
         'pages/home',
         'pages/authorize',
-        'pages/index',
+        // 'pages/index',
         'pages/info',
-        'pages/search',
+        // 'pages/search',
         'pages/success',
         'pages/route/route_release',
-        'pages/route/msg_success',
         'pages/route/route_detail',
+        'pages/route/route_follow',
         'pages/account/supplementary_info_step1',
         'pages/account/supplementary_info_step2',
-        'example/index',
-        'example/button',
-        'example/list',
-        'example/input',
-        'example/slider',
-        'example/uploader',
-        'example/article',
-        'example/badge',
-        'example/flex',
-        'example/footer',
-        'example/gallery',
-        'example/grid',
-        'example/icons',
-        'example/loadmore',
-        'example/panel',
-        'example/preview',
-        'example/progress',
-        'example/actionsheet',
-        'example/dialog',
-        'example/msg',
-        'example/msg_fail',
-        'example/msg_success',
-        'example/picker',
-        'example/toast',
-        'example/navbar',
-        'example/tabbar',
-        'example/searchbar'
+        // 'example/index',
+        // 'example/button',
+        // 'example/list',
+        // 'example/input',
+        // 'example/slider',
+        // 'example/uploader',
+        // 'example/article',
+        // 'example/badge',
+        // 'example/flex',
+        // 'example/footer',
+        // 'example/gallery',
+        // 'example/grid',
+        // 'example/icons',
+        // 'example/loadmore',
+        // 'example/panel',
+        // 'example/preview',
+        // 'example/progress',
+        // 'example/actionsheet',
+        // 'example/dialog',
+        // 'example/msg',
+        // 'example/msg_fail',
+        // 'example/msg_success',
+        // 'example/picker',
+        // 'example/toast',
+        // 'example/navbar',
+        // 'example/tabbar',
+        // 'example/searchbar'
       ],
       window: {
         navigationBarTitleText: '乐途',
@@ -76,30 +76,31 @@
         color: '#8a8a8a',
         selectedColor: '#e22727',
         backgroundColor: '#FFFFFF',
-        list: [{
-            pagePath: 'pages/index',
-            text: '首页',
-            iconPath: 'images/icon/home.png',
-            selectedIconPath: 'images/icon/home-selected.png'
-          },
-          {
-            pagePath: 'example/index',
-            text: 'WEUI',
-            iconPath: 'images/icon/send.png',
-            selectedIconPath: 'images/icon/send-s.png'
-          },
+        list: [
+          // {
+          //   pagePath: 'pages/index',
+          //   text: '首页',
+          //   iconPath: 'images/icon/home.png',
+          //   selectedIconPath: 'images/icon/home-selected.png'
+          // },
+          // {
+          //   pagePath: 'example/index',
+          //   text: 'WEUI',
+          //   iconPath: 'images/icon/send.png',
+          //   selectedIconPath: 'images/icon/send-s.png'
+          // },
           {
             pagePath: 'pages/home',
             text: '首页',
-            iconPath: 'images/icon/send.png',
-            selectedIconPath: 'images/icon/send-s.png'
+            iconPath: 'images/icon/home.png',
+            selectedIconPath: 'images/icon/home-s.png'
           },
-          {
-            pagePath: 'pages/search',
-            text: '搜索',
-            iconPath: 'images/icon/search.png',
-            selectedIconPath: 'images/icon/search-s.png'
-          },
+          // {
+          //   pagePath: 'pages/search',
+          //   text: '搜索',
+          //   iconPath: 'images/icon/search.png',
+          //   selectedIconPath: 'images/icon/search-s.png'
+          // },
           {
             pagePath: 'pages/info',
             text: '我',
@@ -160,6 +161,33 @@
     }
     onLaunch() {
       this.testAsync()
+
+      wepy.getClipboardData()
+      .then(cval => {
+        // 如果是分享码就到服务端解析
+        if(cval.data.match(/√[a-zA-Z0-9]{11}√$/g)) {
+          console.log('粘贴板：' + cval.data)
+          api.resolveShareCode({
+            showLoading: false,
+            query: {
+              content: cval.data
+            },
+            success: res => {
+              if (res.data) {
+                // 清空剪贴板
+                wepy.setClipboardData({
+                  data: ''
+                }).then(()=> {
+                  wepy.hideToast();
+                })
+                wepy.navigateTo({
+                  url: `/pages/route/route_detail?id=${res.data}`
+                })
+              }
+            }
+          })
+        }
+      })
     }
     onShow() {
       this.checkFullScreen()
