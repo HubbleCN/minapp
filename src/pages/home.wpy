@@ -45,7 +45,7 @@
           <i class="iconfont icon-exchange" bindtap="exchangeLocation"></i>
         </view>
       </view>
-      <button class="weui-btn" type="primary" bindtap="next">查询</button>
+      <!-- <button class="weui-btn" type="primary" bindtap="loadData">查询</button> -->
     </view>
     <view class="pc-routes" wx:if="{{!is_empty}}">
       <view class="pc-route-item" wx:for="{{pageData.list}}" wx:key="id" bindtap="detail({{item}})">
@@ -121,6 +121,7 @@
         noMore: false,
         list: []
       },
+      timer: undefined
     };
     components = {
       placeholder: Placeholder
@@ -181,6 +182,11 @@
         this.destination = tmp
         wepy.setStorageSync('origin', this.origin)
         wepy.setStorageSync('destination', this.destination)
+
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
+          this.loadData()
+        }, 1000);
       }
     };
     events = {};
@@ -212,8 +218,12 @@
         method: 'POST',
         showLoading: true,
         query: {
-          fromLatitude: this.location.latitude,
-          fromLongitude: this.location.longitude,
+          // fromLatitude: this.location.latitude,
+          // fromLongitude: this.location.longitude,
+          fromLatitude: this.origin.latitude,
+          fromLongitude: this.origin.longitude,
+          toLatitude: this.destination.latitude,
+          toLongitude: this.destination.longitude,
           pageNum: this.pageData.pageNum,
           pageSize: this.pageData.pageSize
         },
@@ -277,11 +287,11 @@
       })
     };
     onLoad() {
+      this.origin = wepy.getStorageSync('origin') || {}
+      this.destination = wepy.getStorageSync('destination') || {}
       // this.getLocation()
     };
     onShow() {
-      this.origin = wepy.getStorageSync('origin') || {}
-      this.destination = wepy.getStorageSync('destination') || {}
       if (this.location === null) {
         console.log('执行getLocation')
         this.getLocation()

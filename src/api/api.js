@@ -35,6 +35,10 @@ const followPrepare = (params) => wxRequest(params, `/route/follow/prepare`)
 const followRoute = (params) => wxRequest(params, `/route/follow`)
 // 首页获取推荐路线
 const getRouteRecommendation = (params) => wxRequest(params, `/route/home/recommendation`)
+// 我发布的行程
+const getMyRelease = (params) => wxRequest(params, `/route/my/release`)
+// 我参与的行程
+const getMyFollow = (params) => wxRequest(params, `/route/my/follow`)
 
 // 根据ID获取路线详情
 const getRouteById = (params) => wxRequest(params, null)
@@ -71,5 +75,7 @@ export default {
   checkReleasePermission,
   checkFollowPermission,
   followPrepare,
-  followRoute
+  followRoute,
+  getMyRelease,
+  getMyFollow
 }
