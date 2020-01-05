@@ -48,25 +48,6 @@
           <input class="weui-input" bindinput="bindAlipayPhoneInput" placeholder="请输入支付宝账号" value="{{alipayPhone}}" />
         </view>
       </view>
-      <view class="weui-cell">
-        <view class="weui-cell__bd">
-          <view class="weui-uploader">
-            <view class="weui-uploader__hd">
-              <view class="weui-uploader__title">微信收款码</view>
-            </view>
-            <view class="weui-uploader__bd">
-              <view class="weui-uploader__files" id="uploaderFiles">
-                <view wx:if="wechatPayQrcode" class="weui-uploader__file" @tap="previewImage" id="{{wechatPayQrcode}}">
-                  <image class="weui-uploader__img" src="{{wechatPayQrcode}}" mode="aspectFill" />
-                </view>
-              </view>
-              <view class="weui-uploader__input-box">
-                <view class="weui-uploader__input" @tap="chooseImage"></view>
-              </view>
-            </view>
-          </view>
-        </view>
-      </view>
     </view>
     <button class="weui-btn" type="primary" bindtap="next">下一步</button>
     <view class="az-tips">
@@ -137,27 +118,6 @@
       bindAlipaySameChange(e) {
         this.alipaySame = e.detail.value
       },
-      chooseImage(e) {
-        wepy.chooseImage({
-          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-          sourceType: ['album', 'camera'] // 可以指定来源是相册还是相机，默认二者都有
-        }).then(res => {
-          // 上传文件
-          api.uploadFile({
-            filePath: res.tempFilePaths[0],
-            success: upres => {
-              this.wechatPayQrcode = upres.data
-              this.$apply()
-            }
-          })
-        })
-      },
-      previewImage(e) {
-        wepy.previewImage({
-          current: e.currentTarget.id, // 当前显示图片的http链接
-          urls: [this.wechatPayQrcode] // 需要预览的图片http链接列表
-        })
-      },
       next() {
         util.validateNotEmpty(this.name, '联系人未填')
         util.validateNotEmpty(this.phone, '手机号码未填')
@@ -169,13 +129,11 @@
         }
         util.validateNotEmpty(this.wechatPhone, '微信手机号未填')
         util.validateNotEmpty(this.alipayPhone, '支付宝账号未填')
-        util.validateNotEmpty(this.wechatPayQrcode, '微信收款码缺失')
         var params = {
           name: this.name,
           phone: this.phone,
           wechatPhone: this.wechatPhone,
-          alipayPhone: this.alipayPhone,
-          wechatPayQrcode: this.wechatPayQrcode
+          alipayPhone: this.alipayPhone
         }
         let editData = JSON.parse(JSON.stringify(this.preData))
         Object.assign(editData, params)
@@ -210,7 +168,6 @@
           this.wechatPhone = res.data.wechatPhone
           this.alipayPhone = res.data.alipayPhone
           this.preData = res.data
-          this.wechatPayQrcode = res.data.wechatPayQrcode
           this.$apply()
         }
       })
@@ -220,7 +177,7 @@
 </script>
 
 <style lang='less'>
-  @import '../../style/base.less';
+  @import '../../style/base/fn.less';
   .weui-cells {
     width: 750rpx;
     margin-top: 20rpx;

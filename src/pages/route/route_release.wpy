@@ -56,7 +56,7 @@
         </view>
         <view class="weui-cell__bd">
           <view class="weui-cell__bd">
-            <input class="weui-input" bindinput="bindPriceInput" placeholder="请输入单人价格" value="{{price}}" />
+            <input class="weui-input" bindinput="bindPriceInput" placeholder="请输入单人价格" value="{{price}}" type="number" />
           </view>
         </view>
       </view>
@@ -142,15 +142,15 @@
       array: [1, 2, 3, 4, 5, 6],
       origin: {},
       destination: {},
-      seat: 1,
-      phone: '',
-      date: '',
-      time: '12:01',
-      price: 0,
-      carInfo: '',
-      carnum: '',
+      seat: undefined,
+      phone: undefined,
+      date: undefined,
+      time: undefined,
+      price: undefined,
+      carInfo: undefined,
+      carnum: undefined,
       showCarnumModal: false,
-      verifyCode: '',
+      verifyCode: undefined,
       via: '',
       isFullScreen: false,
       isAgree: false
@@ -259,21 +259,6 @@
     };
     onLoad() {
       this.isFullScreen = this.$parent.globalData.isFullScreen
-      // TODO 测试
-      if (true) {
-        this.origin = {
-          longitude: 118.795214,
-          latitude: 32.060965,
-          locationName: '古鸡鸣寺',
-          locationAddress: '江苏省南京市玄武区北京东路39号'
-        }
-        this.destination = {
-          longitude: 118.79647,
-          latitude: 32.05838,
-          locationName: '古鸡鸣寺',
-          locationAddress: '江苏省南京市玄武区北京东路39号'
-        }
-      }
       api.releasePrepare({
         method: 'POST',
         showLoading: true,
@@ -286,7 +271,7 @@
           this.seat = 4
           this.date = res.data.date
           this.time = res.data.time
-          this.price = '5'
+          // this.price = '5'
           this.$apply()
         }
       })
@@ -299,5 +284,5 @@
 </script>
 
 <style lang='less'>
-  @import '../../style/base.less';
+  @import '../../style/base/fn.less';
 </style>

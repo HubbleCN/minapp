@@ -409,3 +409,50 @@ button[type=primary].weui-btn {
     }
   }
 }
+
+.az-search-bar {
+  width: 710rpx;
+  margin-top: 10rpx;
+  .weui-search-bar {
+    border: none;
+    background-color: transparent;
+    flex: 1;
+    padding: 0;
+    .weui-icon-search_in-box {
+      top: 24rpx;
+    }
+    .weui-search-bar__input {
+      height: 80rpx;
+      line-height: 80rpx;
+    }
+    .weui-icon-clear {
+      padding: 24rpx 16rpx;
+    }
+  }
+  .weui-search-bar__label {
+    right: 8rpx;
+    border-radius: 5px;
+  }
+  .nearby-search {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 2rpx 6rpx;
+    font-size: 0;
+    .iconfont {
+      font-size: 48rpx;
+    }
+  }
+  .release-route {
+    padding: 0 25rpx;
+    background: @azuiPrimaryColor;
+    color: #ffffff;
+    border-radius: 40rpx;
+    height: 74rpx;
+    margin-top: 4rpx;
+    .iconfont {
+      font-size: 40rpx;
+      line-height: 72rpx;
+    }
+  }
+}

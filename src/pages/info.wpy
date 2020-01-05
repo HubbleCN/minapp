@@ -13,18 +13,18 @@
           <view class="z-sign-btn">签到</view>
         </view>
         <view class="az-row">
-          <view class="z-ui-item az-col">
+          <navigator class="z-ui-item az-col" url="/pages/my_release" hover-class="weui-cell_active">
             <view>{{release}}</view>
             <view>发布的</view>
-          </view>
-          <view class="z-ui-item az-col">
-            <view>8</view>
+          </navigator>
+          <navigator class="z-ui-item az-col" url="/pages/my_follow" hover-class="weui-cell_active">
+            <view>{{follow}}</view>
             <view>参与的</view>
-          </view>
-          <view class="z-ui-item az-col">
+          </navigator>
+          <navigator class="z-ui-item az-col" url="/pages/register" hover-class="weui-cell_active">
             <view>188</view>
             <view>我的积分</view>
-          </view>
+          </navigator>
         </view>
       </view>
     </view>
@@ -45,10 +45,10 @@
         </view>
         <view class="arrow"></view>
       </navigator>
-      <navigator class="item" bindtap="contactAuthor" hover-class="weui-cell_active">
+      <navigator class="item" url="/pages/suggestion" hover-class="weui-cell_active">
         <view class="item_content">
           <i class="iconfont icon-icon-test35"></i>
-          <view class="text">联系客服</view>
+          <view class="text">意见反馈</view>
         </view>
         <view class="arrow"></view>
       </navigator>
@@ -62,11 +62,9 @@
         <view class="arrow"></view>
       </navigator>
     </view>
-
     <view class="fixed-button">
       <button open-type="contact" hover-class="az-hover"><i class="iconfont icon-kefu"></i></button>
     </view>
-
     <view class="weui-msg__extra-area">
       <view class="weui-footer">
         <view class="weui-footer__links">
@@ -97,6 +95,7 @@
       nickName: '',
       bShowBind: false,
       release: 0,
+      follow: 0
     }
     getUserInfo(phon, code) {
       let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {}
@@ -119,24 +118,26 @@
       let userInfo = wepy.getStorageSync(USER_INFO)
       this.avatarUrl = userInfo.avatarUrl
       this.nickName = userInfo.nickName
-    }
-    onShow() {
       let self = this
       api.getAccountOverview({
         method: 'POST',
         success: res => {
           const data = res.data
           self.release = data.release
+          self.follow = data.follow
           self.$apply()
         }
       })
+    }
+    onShow() {
+
     }
     computed = {}
     methods = {
       openSetting() {
         wepy.openSetting({})
       },
-      contactAuthor () {
+      contactAuthor() {
         tip.success("微信已复制")
       },
       donate(e) {
@@ -253,7 +254,6 @@
       margin-left: 60rpx;
     }
   }
-
   .fixed-button {
     bottom: 130rpx;
     right: 30rpx;

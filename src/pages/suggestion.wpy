@@ -1,0 +1,145 @@
+<!--  -->
+<template>
+  <view>
+    <view class="weui-cells">
+      <view class="weui-cell weui-cell_select">
+        <view class="weui-cell__bd">
+          <picker @change="bindTypeChange" value="{{typeIndex}}" range="{{types}}">
+            <view class="weui-select">{{types[typeIndex]}}</view>
+          </picker>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells__title"></view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell">
+        <view class="weui-cell__bd">
+          <textarea class="weui-textarea" placeholder="请写下您的建议，如功能需求、产品吐槽等，我们会努力改进" bindinput="bindContentInput" style="height: 3.3em" />
+          <view class="weui-textarea-counter">{{contentLength}}/200</view>
+        </view>
+      </view>
+      <view class="weui-cell">
+        <view class="weui-cell__bd">
+          <view class="weui-uploader">
+            <view class="weui-uploader__hd">
+              <view class="weui-uploader__title">可加3张图</view>
+            </view>
+            <view class="weui-uploader__bd">
+              <view class="weui-uploader__files" id="uploaderFiles">
+                <block wx:for="{{localImages}}" wx:key="*this">
+                  <view class="weui-uploader__file" @tap="previewImage" id="{{item}}">
+                    <image class="weui-uploader__img" src="{{item}}" mode="aspectFill" />
+                  </view>
+                </block>
+              </view>
+              <view class="weui-uploader__input-box" wx:if="{{localImages.length < 3}}">
+                <view class="weui-uploader__input" @tap="chooseImage"></view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <button class="weui-btn" type="primary" bindtap="submit">确认</button>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import util from '@/utils/util'
+  import api from '@/api/api'
+  import moment from 'moment'
+  import CarNumber from '@/components/common/car_number'
+  import VerifyCode from '@/components/common/verify_code'
+  export default class RouteRelease extends wepy.page {
+    config = {
+      // navigationBarTitleText: ''
+    };
+    data = {
+      types: ['功能建议', '产品吐槽', '其他'],
+      typeIndex: 0,
+      content: '',
+      localImages: [],
+      serverImages: []
+    };
+    components = {
+      carNum: CarNumber,
+      verifyCode: VerifyCode
+    };
+    methods = {
+      bindTypeChange(e) {
+        this.typeIndex = e.detail.value
+      },
+      bindContentInput(e) {
+        this.content = e.detail.value
+      },
+      chooseImage(e) {
+        wepy.chooseImage({
+          count: 3 - this.localImages.length,
+          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ['album', 'camera'] // 可以指定来源是相册还是相机，默认二者都有
+        }).then(res => {
+          if (res.tempFilePaths.count === 0) {
+            return
+          }
+          let tempFilePaths = res.tempFilePaths
+          for (let i = 0; i < tempFilePaths.length; i++) {
+            // 上传文件
+            api.uploadFile({
+              filePath: tempFilePaths[i],
+              success: upres => {
+                // 本地地址，用于预览
+                this.localImages.push(tempFilePaths[i])
+                // 服务器地址，用于提交表单
+                this.serverImages.push(upres.data)
+                this.$apply()
+              }
+            })
+          }
+        })
+      },
+      previewImage(e) {
+        wepy.previewImage({
+          current: e.currentTarget.id, // 当前显示图片的http链接
+          urls: this.localImages // 需要预览的图片http链接列表
+        })
+      },
+      submit() {
+        util.validateNotEmpty(this.content, '内容未填写')
+        let params = {
+          type: this.types[this.typeIndex],
+          content: this.content,
+          imgOne: this.serverImages[0],
+          imgTwo: this.serverImages[1],
+          imgThree: this.serverImages[2]
+        }
+        api.submitSuggestion({
+          method: 'POST',
+          query: params,
+          success: res => {
+            wepy.navigateTo({
+              url: `/pages/success?msg=` + JSON.stringify({
+                delta: 2
+              })
+            })
+          },
+          fail: () => {
+          }
+        })
+      }
+    };
+    events = {};
+    watch = {};
+    computed = {
+      contentLength() {
+        return this.content.length
+      }
+    };
+    onLoad() {}
+    onShow() {};
+  }
+</script>
+
+<style lang='less'>
+  @import '../style/base/fn.less';
+</style>

@@ -81,7 +81,7 @@
 </script>
 
 <style lang='less'>
-  @import '../../style/base.less';
+  @import '../../style/base/fn.less';
   .az-steps-bg {
     background: #fff;
     width: 710rpx;

@@ -65,7 +65,7 @@
                         <image mode="aspectFit" show-menu-by-longpress="true" src="{{route.wechatPayQrcode}}" />
                       </view> -->
       <!-- <view class="footer-bar az-row" wx:if="{{!isAuthor}}"> -->
-      <view class="footer-bar az-row">
+      <view class="footer-bar az-row" wx:if="{{!isAuthor}}">
         <view bindtap="copyRouteInfo"><i class="iconfont icon-icon-test12"></i>分享</view>
         <view bindtap="copy({{route.wechatPhone}}, '微信已复制')" wx:if="{{isFollower}}"><i class="iconfont icon-weixin"></i>微信</view>
         <view bindtap="copy({{route.alipayPhone}}, '支付宝已复制')" wx:if="{{isFollower}}"><i class="iconfont icon-zhifubaozhanghu"></i>支付宝</view>
@@ -75,9 +75,9 @@
         <view class="col confirm-btn" bindtap="followRoute">跟车</view>
       </view>
       <view class="bottom-bar {{isFullScreen?'fix-full-screen':''}} az-row" wx:if="{{isAuthor}}">
-        <view class="col default-btn" bindtap="copyRouteInfo"><i class="iconfont icon-icon-test12"></i>分享</view>
-        <view class="col default-btn" bindtap="followRoute"><i class="iconfont icon-icon_delete"></i>删除</view>
-        <view class="col confirm-btn" bindtap="followRoute">修改</view>
+        <view class="col default-btn" bindtap="copyRouteInfo"  hover-class="weui-cell_active"><i class="iconfont icon-icon-test12"></i>分享</view>
+        <view class="col default-btn" bindtap="followRoute"  hover-class="weui-cell_active"><i class="iconfont icon-icon_delete"></i>删除</view>
+        <view class="col confirm-btn" bindtap="followRoute" hover-class="weui-cell_active">修改</view>
       </view>
     </view>
   </view>
@@ -178,10 +178,10 @@
         showLoading: true,
         success: res => {
           this.route = res.data.route
-          // this.enableFollow = res.data.enableFollow
-          // this.isAuthor = res.data.isAuthor
+          this.enableFollow = res.data.enableFollow
+          this.isAuthor = res.data.isAuthor
           this.isFollower = res.data.isFollower
-          // this.followers = res.data.followers
+          this.followers = res.data.followers
           this.route.dtime = moment(this.route.departureTime).format('HH:mm')
           this.route.ddate = moment(this.route.departureTime).format('YYYY-MM-DD')
           this.route.ddatetime = moment(this.route.departureTime).format('YYYY.MM.DD ddd HH:mm')

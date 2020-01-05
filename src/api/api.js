@@ -44,17 +44,20 @@ const getMyFollow = (params) => wxRequest(params, `/route/my/follow`)
 const getRouteById = (params) => wxRequest(params, null)
 
 // 根据ID获取路线详情
-const getAccountOverview = (params) => wxRequest(params, `/account/overview`)
+const getAccountOverview = (params) => wxRequest(params, `/user/overview`)
 
 // 保存用户信息
-const saveUserInfo = (params) => wxRequest(params, `/account/userInfo/edit`)
+const saveUserInfo = (params) => wxRequest(params, `/user/userInfo/edit`)
 // 获取当前的用户详细信息
-const getCurrentUserInfo = (params) => wxRequest(params, `/account/userInfo/getCurrent`)
+const getCurrentUserInfo = (params) => wxRequest(params, `/user/userInfo/getCurrent`)
 
 // 保存车辆信息
-const saveCarInfo = (params) => wxRequest(params, `/account/carInfo/edit`)
+const saveCarInfo = (params) => wxRequest(params, `/user/carInfo/edit`)
 // 获取当前用户的车辆信息
-const getCurrentCarInfo = (params) => wxRequest(params, `/account/carInfo/getCurrent`)
+const getCurrentCarInfo = (params) => wxRequest(params, `/user/carInfo/getCurrent`)
+
+// 提交建议
+const submitSuggestion = (params) => wxRequest(params, `/user/suggestion/submit`)
 
 export default {
   serverUrl,
@@ -77,5 +80,6 @@ export default {
   followPrepare,
   followRoute,
   getMyRelease,
-  getMyFollow
+  getMyFollow,
+  submitSuggestion
 }
