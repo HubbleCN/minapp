@@ -2,7 +2,7 @@
 <template>
   <view class="az-steps-bg">
     <view class="az-steps">
-      <block wx:for="{{steps}}" wx:key="*this">
+      <block wx:for="{{steps}}" wx:key="title">
         <view class="az-step-item {{!step || index < step? 'az-step-item-process' : ''}} ">
           <view class="az-step-item-icon">
             <view>{{index + 1}}</view>
